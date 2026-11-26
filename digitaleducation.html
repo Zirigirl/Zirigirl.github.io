@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>모두의 학습지</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Nanum+Pen+Script&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #F6F8F6; --surface: #FFFFFF; --paper: #FFFEFB;
+  --ink: #1F2A24; --ink2: #3E4A43; --muted: #4A5650;
+  --line: #DCE5DF; --line2: #C5D2CA; --line3: #9DB5A6;
+  --accent: #2F7D5B; --accent-ink: #1F5E43; --accent-soft: #EAF4EE; --on-accent: #FFFFFF; --off: #6E7D74;
+  --hint-bg: #FFF7DB; --hint-line: #E9C46A; --hint-ink: #5C4200;
+  --warn: #8A3F00; --warn-soft: #FFF4E8; --warn-line: #F0C08A; --on-warn: #FFFFFF;
+  --info: #1E3A5F; --info-soft: #EEF3FA; --info-line: #B9CBE6;
+  --blue: #1D4F91; --blue-soft: #D6E8FA; --red: #A1271E; --red-soft: #FBD9D6;
+  --photo: #E6ECE8; --shadow: 0 2px 10px rgba(31,42,36,0.06);
+  --intro: #2F7D5B; --intro-deep: #24684B; --intro-ink: #FFFFFF; --intro-soft: #D7EEE2;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #121714; --surface: #1A211D; --paper: #1E2521;
+    --ink: #E6EEE9; --ink2: #C3CEC7; --muted: #A3B0A8;
+    --line: #2C3631; --line2: #3A4741; --line3: #52635A;
+    --accent: #5DB08A; --accent-ink: #8FD1B0; --accent-soft: #1F3329; --on-accent: #0E1511; --off: #52635A;
+    --hint-bg: #3A3014; --hint-line: #7A6421; --hint-ink: #F3DC9A;
+    --warn: #F0A868; --warn-soft: #3A2716; --warn-line: #6E4A28; --on-warn: #1A1008;
+    --info: #A9C6EE; --info-soft: #1C2838; --info-line: #34486A;
+    --blue: #8DB8F0; --blue-soft: #1B2A40; --red: #F2958C; --red-soft: #3D1E1B;
+    --photo: #26302B; --shadow: none;
+    --intro: #1E4A37; --intro-deep: #173B2C; --intro-ink: #F2F8F4; --intro-soft: #BFE0CF;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121714; --surface: #1A211D; --paper: #1E2521;
+  --ink: #E6EEE9; --ink2: #C3CEC7; --muted: #A3B0A8;
+  --line: #2C3631; --line2: #3A4741; --line3: #52635A;
+  --accent: #5DB08A; --accent-ink: #8FD1B0; --accent-soft: #1F3329; --on-accent: #0E1511; --off: #52635A;
+  --hint-bg: #3A3014; --hint-line: #7A6421; --hint-ink: #F3DC9A;
+  --warn: #F0A868; --warn-soft: #3A2716; --warn-line: #6E4A28; --on-warn: #1A1008;
+  --info: #A9C6EE; --info-soft: #1C2838; --info-line: #34486A;
+  --blue: #8DB8F0; --blue-soft: #1B2A40; --red: #F2958C; --red-soft: #3D1E1B;
+  --photo: #26302B; --shadow: none;
+  --intro: #1E4A37; --intro-deep: #173B2C; --intro-ink: #F2F8F4; --intro-soft: #BFE0CF;
+}
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 80px); }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif; font-size: 16px; line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--surface); }
+body.is-intro { background: var(--intro); }
+body.is-intro::before { background: var(--intro); }
+*, *::before, *::after { box-sizing: border-box; }
+button, input, textarea, select { font: inherit; color: inherit; }
+a { color: var(--accent-ink); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* top bar */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 1160px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: var(--ink); background: none; border: none; padding: 6px 4px; cursor: pointer; min-height: 44px; }
+.nav { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.nav button { background: none; border: none; padding: 10px 14px; border-radius: 8px; color: var(--ink2); font-size: 15px; cursor: pointer; min-height: 44px; }
+.nav button[aria-current="page"] { background: var(--accent-soft); color: var(--accent-ink); font-weight: 700; }
+.who { margin-left: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent-ink); background: var(--surface); font-size: 14px; font-weight: 500; cursor: pointer; min-height: 40px; }
+
+main { max-width: 1160px; margin: 0 auto; padding: 28px 20px 72px; display: flex; flex-direction: column; gap: 22px; }
+main.narrow { max-width: 960px; }
+h1 { margin: 0; font-size: 28px; line-height: 1.3; letter-spacing: -0.01em; }
+h2 { margin: 0; font-size: 19px; line-height: 1.4; }
+h3 { margin: 0; font-size: 17px; color: var(--accent-ink); }
+p { margin: 0; }
+.sub { color: var(--muted); font-size: 15px; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.between { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.split { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.split > .grow { flex: 999 1 540px; min-width: 0; }
+.split > .side { flex: 1 1 320px; min-width: 0; }
+
+/* flow steps */
+.flow { display: flex; gap: 6px; flex-wrap: wrap; margin: 0; padding: 0; list-style: none; }
+.flow button { display: flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 999px; border: 1px solid var(--line2); background: var(--surface); color: var(--ink2); font-size: 14px; cursor: pointer; min-height: 40px; }
+.flow .n { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--accent-soft); color: var(--accent-ink); font-weight: 700; font-size: 13px; }
+.flow button[aria-current="step"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 700; }
+.flow button[aria-current="step"] .n { background: var(--on-accent); color: var(--accent); }
+.flow .done .n { background: var(--accent); color: var(--on-accent); }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 12px; border: 1px solid var(--line2); background: var(--surface); color: var(--ink); font-size: 16px; cursor: pointer; text-decoration: none; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 700; }
+.btn.primary:disabled { background: var(--off); border-color: var(--off); cursor: not-allowed; }
+.btn.outline { border: 2px solid var(--accent); color: var(--accent-ink); font-weight: 700; }
+.btn.lg { min-height: 56px; font-size: 18px; padding: 0 30px; }
+.foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.foot .note { font-size: 14px; color: var(--muted); }
+
+/* pills & choice */
+.pill { display: inline-flex; align-items: center; padding: 3px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); font-size: 13px; }
+.pill.solid { background: var(--accent); color: var(--on-accent); font-weight: 700; }
+.tag { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--warn); color: var(--on-warn); font-size: 12px; font-weight: 700; vertical-align: middle; }
+.choice { display: flex; flex-wrap: wrap; gap: 8px; }
+.choice button { min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line2); background: var(--surface); color: var(--ink); font-size: 15px; cursor: pointer; }
+.choice button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 700; }
+.groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.groups button { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 16px 18px; min-height: 88px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); text-align: left; cursor: pointer; }
+.groups button strong { font-size: 17px; }
+.groups button span { font-size: 15px; color: var(--muted); }
+.groups button[aria-pressed="true"] { border: 2px solid var(--accent); background: var(--accent-soft); }
+.checks { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.check { display: flex; gap: 12px; align-items: flex-start; padding: 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; }
+.check:has(input:checked) { border: 2px solid var(--accent); background: var(--accent-soft); }
+.check input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--accent); flex-shrink: 0; }
+.check strong { display: block; font-size: 16px; }
+.check small { display: block; font-size: 14px; color: var(--muted); line-height: 1.5; }
+label.field { display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 500; }
+textarea, input[type="text"] { width: 100%; padding: 12px 14px; border: 1px solid var(--line2); border-radius: 10px; background: var(--surface); font-size: 16px; font-weight: 400; line-height: 1.6; }
+textarea { resize: vertical; }
+
+/* dropdown */
+.dd-row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.dd { position: relative; flex: 1 1 220px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.dd.full { flex-basis: 100%; }
+.dd .lab { align-self: flex-start; font-size: 15px; font-weight: 700; border: 2px solid var(--ink); border-radius: 8px; padding: 1px 10px; }
+.dd > button { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; min-height: 52px; padding: 10px 14px; border: 1px solid var(--line3); border-radius: 10px; background: var(--surface); text-align: left; font-size: 16px; cursor: pointer; }
+.dd > button span { overflow: hidden; text-overflow: ellipsis; }
+.dd ul { position: absolute; top: 100%; left: 0; right: 0; z-index: 15; margin: 6px 0 0; padding: 6px; list-style: none; background: var(--surface); border: 1px solid var(--line2); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.16); max-height: 320px; overflow-y: auto; }
+.dd li button { width: 100%; text-align: left; padding: 10px 12px; min-height: 44px; border: none; border-radius: 8px; background: none; font-size: 15px; line-height: 1.5; cursor: pointer; }
+.dd li button[aria-selected="true"] { background: var(--accent-soft); font-weight: 700; }
+.dd li button:hover { background: var(--accent-soft); }
+.arrow { padding-bottom: 14px; font-size: 22px; color: var(--accent); }
+.goal { background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; font-size: 15px; }
+
+/* home */
+.hero { text-align: center; display: flex; flex-direction: column; gap: 10px; align-items: center; padding-top: 12px; }
+.hero h1 { font-size: 46px; letter-spacing: -0.02em; }
+.bigs { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.big { display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 32px; min-height: 210px; border-radius: 22px; border: 2px solid var(--accent); background: var(--surface); text-align: left; cursor: pointer; }
+.big strong { font-size: 27px; }
+.big span { font-size: 16px; color: var(--muted); }
+.big.primary { background: var(--accent); color: var(--on-accent); }
+.big.primary span { color: var(--on-accent); opacity: 0.9; }
+.school { text-align: center; font-size: 14px; color: var(--muted); padding-top: 8px; border-top: 1px solid var(--line); }
+
+/* tabs */
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+.tabs button { background: none; border: none; border-bottom: 3px solid transparent; padding: 10px 18px; min-height: 56px; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 0; color: var(--muted); font-size: 16px; }
+.tabs button small { font-size: 12px; color: var(--muted); }
+.tabs button[aria-selected="true"] { border-bottom-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.banner { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--accent-soft); color: var(--accent-ink); border-radius: 12px; padding: 14px 18px; font-size: 15px; }
+
+/* worksheet */
+.sheet { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; box-shadow: var(--shadow); padding: 40px; max-width: 760px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+.shead { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.unitbox { flex: 1 1 260px; border: 2px solid var(--ink); border-radius: 10px; padding: 10px 16px; font-size: 18px; font-weight: 700; }
+.idbox { display: flex; gap: 14px; flex-wrap: wrap; font-size: 15px; color: var(--ink2); }
+.idbox b { display: inline-block; min-width: 56px; border-bottom: 1px solid var(--ink); text-align: center; padding: 0 6px; font-weight: 500; color: var(--ink); }
+.q { font-size: 17px; line-height: 1.7; }
+.steps { margin: 0; padding-left: 22px; font-size: 16px; line-height: 2.1; }
+.blank { min-height: 70px; border: 1px dashed var(--line2); border-radius: 8px; padding: 8px 12px; font-size: 13px; color: var(--muted); }
+.vocab { background: var(--info-soft); border: 1px solid var(--info-line); border-radius: 10px; padding: 14px 16px; font-size: 15px; line-height: 1.8; color: var(--info); }
+figure.mat { margin: 0; border: 1px solid var(--line2); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+figure.mat figcaption { font-size: 14px; font-weight: 700; }
+.mapph { height: 140px; background: var(--photo); border-radius: 6px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 13px; color: var(--muted); padding: 8px; }
+.legend { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; color: var(--ink2); }
+.legend i { display: inline-block; width: 26px; height: 14px; border: 1px solid var(--line3); }
+.pyr { display: flex; gap: 16px; align-items: flex-start; }
+.pyr .ax { display: flex; flex-direction: column; justify-content: space-between; font-size: 12px; color: var(--ink2); padding-top: 22px; height: 112px; }
+.pyr .p { flex: 1 1 120px; display: flex; flex-direction: column; gap: 3px; }
+.pyr .p b { font-size: 13px; text-align: center; }
+.pyr .p i { display: block; height: 12px; background: #6FA38A; margin: 0 auto; }
+.hint { display: flex; flex-direction: column; gap: 8px; }
+.hint > button { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--hint-line); background: var(--hint-bg); color: var(--hint-ink); font-size: 15px; font-weight: 700; cursor: pointer; }
+.hint > button small { font-weight: 400; font-size: 13px; }
+.hint .body { background: var(--hint-bg); border: 1px solid var(--hint-line); border-radius: 10px; padding: 12px 16px; color: var(--hint-ink); font-size: 16px; animation: drop .18s ease-out; }
+.hint .body.tagged::before { content: none; }
+@keyframes drop { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .hint .body { animation: none; } }
+
+/* tables */
+.tbl { overflow-x: auto; }
+.tbl table { border-collapse: collapse; width: 100%; min-width: 560px; background: var(--surface); }
+.tbl th, .tbl td { padding: 12px; border: 1px solid var(--line); font-size: 14px; line-height: 1.6; vertical-align: top; text-align: left; }
+.tbl thead th, .tbl tbody th { background: var(--accent-soft); color: var(--accent-ink); }
+.tbl.big th, .tbl.big td { padding: 18px; font-size: 15px; }
+.tbl.big tbody th { width: 150px; text-align: center; vertical-align: middle; font-size: 16px; background: var(--bg); color: var(--ink); }
+ul.list { margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.9; }
+.flowgrid { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
+.flowgrid li { background: var(--bg); border-radius: 8px; padding: 10px 12px; font-size: 14px; display: flex; flex-direction: column; gap: 4px; }
+.flowgrid li strong { color: var(--accent-ink); }
+.flowgrid li em { font-style: normal; align-self: flex-start; padding: 0 8px; border-radius: 999px; border: 1px solid var(--warn); color: var(--warn); font-size: 12px; font-weight: 700; }
+.soft { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; }
+
+/* upload */
+.drop { min-height: 440px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; border: 2px dashed var(--line3); border-radius: 18px; background: var(--surface); text-align: center; padding: 24px; cursor: pointer; }
+.drop.has { border-color: var(--accent); background: var(--accent-soft); }
+.drop img { max-width: 260px; max-height: 320px; border-radius: 6px; border: 1px solid var(--line2); }
+.drop strong { font-size: 22px; }
+.ph { width: 220px; height: 290px; background: var(--photo); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--ink2); }
+
+/* review */
+.rv { flex: 1 1 380px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+.rv > div, .rv > label { padding: 22px 24px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--line); }
+.rv > label { border-bottom: none; font-size: 19px; font-weight: 700; }
+.hl-blue { background: var(--blue-soft); color: var(--blue); padding: 2px 10px; border-radius: 6px; }
+.hl-red { background: var(--red-soft); color: var(--red); padding: 2px 10px; border-radius: 6px; }
+.pen { font-family: 'Nanum Pen Script', cursive; }
+.graded { border: 1px solid var(--line2); border-radius: 4px; padding: 22px; display: flex; flex-direction: column; gap: 16px; background: var(--paper); }
+.gl { display: flex; align-items: center; gap: 10px; }
+.gl .m { font-size: 30px; line-height: 1; }
+.gl .a { font-size: 24px; color: var(--ink); }
+.fb { font-size: 22px; line-height: 1.3; }
+.c-blue { color: var(--blue); } .c-red { color: var(--red); }
+
+/* id boxes */
+.idpair { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.idpair span { display: inline-flex; border: 1px solid var(--ink); border-radius: 8px; overflow: hidden; font-size: 16px; }
+.idpair b { padding: 10px 14px; border-right: 1px solid var(--ink); }
+.idpair em { font-style: normal; padding: 10px 18px; min-width: 120px; }
+
+/* roster & record */
+.roster { margin: 0; padding: 0; list-style: none; }
+.roster li { display: flex; align-items: center; gap: 10px; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+.roster li.me { background: var(--accent-soft); }
+.roster .sid { width: 44px; font-size: 14px; color: var(--ink2); }
+.roster .nm { flex-grow: 1; font-size: 15px; }
+.roster .st { font-size: 12px; }
+.roster button { min-height: 36px; padding: 0 10px; border: 1px solid var(--ink); border-radius: 6px; background: var(--surface); font-size: 13px; cursor: pointer; }
+.sums { display: flex; flex-wrap: wrap; gap: 12px; }
+.sums > div { flex: 1 1 240px; border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
+.sums b { font-size: 14px; }
+.s-ok { background: var(--accent-soft); } .s-ok b { color: var(--accent-ink); }
+.s-help { background: var(--warn-soft); } .s-help b { color: var(--warn); }
+.s-next { background: var(--info-soft); } .s-next b { color: var(--info); }
+.entries { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.entries > li { display: flex; gap: 16px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.entries .thumb { width: 72px; height: 96px; flex-shrink: 0; background: var(--photo); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--ink2); overflow: hidden; }
+.entries .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.entries .body { flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.k-ok { display: inline-block; padding: 1px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); font-size: 13px; font-weight: 700; }
+.k-help { display: inline-block; padding: 1px 9px; border-radius: 999px; background: var(--warn); color: var(--on-warn); font-size: 13px; font-weight: 700; }
+.empty { text-align: center; padding: 36px 20px; color: var(--muted); background: var(--surface); border: 1px dashed var(--line2); border-radius: 14px; }
+.toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 12px 20px; border-radius: 12px; font-size: 15px; z-index: 40; }
+
+/* opening */
+.intro { min-height: 100vh; min-height: 100dvh; background: var(--intro); color: var(--intro-ink); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 40px 20px 32px; text-align: center; position: relative; overflow: hidden; }
+.intro::after { content: ""; position: absolute; left: 50%; bottom: -46vmax; width: 110vmax; height: 60vmax; transform: translateX(-50%); border-radius: 50%; background: var(--intro-deep); z-index: 0; }
+.intro > * { position: relative; z-index: 1; }
+.intro .school { border: none; padding: 0; color: var(--intro-soft); font-size: 16px; letter-spacing: 0.02em; }
+.intro .school b { color: var(--intro-ink); }
+.stage { display: flex; align-items: flex-end; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.bubble { position: relative; align-self: flex-start; margin-top: 18px; background: #FFFFFF; color: #1F2A24; border-radius: 18px; padding: 14px 18px; font-size: 16px; line-height: 1.5; max-width: 240px; text-align: left; box-shadow: 0 6px 18px rgba(0,0,0,0.15); }
+.bubble::after { content: ""; position: absolute; left: -10px; bottom: 18px; border: 10px solid transparent; border-right-color: #FFFFFF; border-left: 0; }
+.intro h1 { font-size: clamp(44px, 9vw, 72px); line-height: 1.1; letter-spacing: -0.03em; color: var(--intro-ink); }
+.intro .tagline { font-size: clamp(17px, 2.6vw, 21px); color: var(--intro-soft); }
+.start { display: inline-flex; align-items: center; gap: 10px; min-height: 60px; padding: 0 36px; border-radius: 999px; border: none; background: #FFFFFF; color: #1F5E43; font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 22px rgba(0,0,0,0.18); }
+.start:hover { background: #F1FAF5; }
+.intro :focus-visible { outline-color: #FFFFFF; }
+.preview { margin: 6px 0 0; padding: 0; list-style: none; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; font-size: 14px; color: var(--intro-soft); }
+.preview li { display: flex; align-items: center; gap: 6px; }
+.preview span { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--intro-soft); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; }
+.teacher .arm { transform-origin: 70px 186px; animation: wave 1.6s ease-in-out 0.4s 2; }
+@keyframes wave { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-14deg); } 75% { transform: rotate(10deg); } }
+@media (prefers-reduced-motion: reduce) { .teacher .arm { animation: none; } }
+
+@media (max-width: 640px) {
+  main { padding: 20px 14px 56px; }
+  .sheet { padding: 22px; }
+  .hero h1 { font-size: 36px; }
+  h1 { font-size: 24px; }
+  .nav button { padding: 8px 10px; font-size: 14px; }
+}
+@media print {
+  body * { visibility: hidden; }
+  .sheet, .sheet * { visibility: visible; }
+  .sheet { position: absolute; left: 0; top: 0; border: none; box-shadow: none; max-width: none; }
+  .hint > button small { display: none; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="live" class="visually-hidden" aria-live="polite"></div>
+<script>
+const CURRICULUM = [{"id": "kor", "name": "국어", "units": [{"n": 1, "name": "듣기⋅말하기", "stds": [["[9국01-01]", "화자의 의도와 관점을 추론하며 듣는다."], ["[9국01-02]", "설득 전략을 비판적으로 분석하며 듣는다."], ["[9국01-03]", "담화 공동체에 따른 듣기⋅말하기 방식의 다양성을 고려하여 듣고 말한다."], ["[9국01-04]", "상대의 말을 경청하고 상대의 감정과 입장에 공감하는 반응을 보이며 대화한다."], ["[9국01-05]", "면담의 다양한 목적과 상대를 고려하여 질문을 점검하고 효과적으로 면담한다."], ["[9국01-06]", "다양한 자료를 재구성하여 내용을 체계적으로 조직하고 청중이 이해하기 쉽게 발표한다."], ["[9국01-07]", "토의에서 다양한 의견을 교환하여 대안을 마련하고 문제를 해결한다."], ["[9국01-08]", "토론에서 반론을 고려하여 타당한 논증을 구성하고 논리적으로 반박한다."], ["[9국01-09]", "서로의 감정이나 바라는 바를 진솔하게 표현하면서 갈등을 조정한다."], ["[9국01-10]", "언어폭력의 문제점을 성찰하고, 서로를 존중하는 표현을 사용하여 말한다."], ["[9국01-11]", "듣기⋅말하기 과정을 점검하고 듣기⋅말하기의 어려움을 효과적으로 조정한다."]]}, {"n": 2, "name": "읽기", "stds": [["[9국02-01]", "읽기는 사회⋅문화적 맥락에서 의미를 구성하는 과정임을 이해하며 사회적 독서에 참여하고 사회적 독서 문화 형성에 기여한다."], ["[9국02-02]", "읽기 목적과 글의 구조를 고려하며 글을 효과적으로 요약한다."], ["[9국02-03]", "독자의 배경지식과 글에 나타난 정보 등을 활용하여 글에 드러나지 않은 의도나 관점을 추론하며 읽는다."], ["[9국02-04]", "복합양식으로 구성된 글이나 자료의 내용 타당성과 신뢰성, 표현 방법의 적절성을 평가하며 읽는다."], ["[9국02-05]", "글에 사용된 다양한 설명 방법과 논증 방법을 파악하고, 그 타당성을 평가하며 읽는다."], ["[9국02-06]", "동일한 화제를 다룬 여러 글이나 자료를 주제 통합적으로 읽는다."], ["[9국02-07]", "진로나 관심 분야에 대한 다양한 책이나 자료를 스스로 찾아 읽는다."], ["[9국02-08]", "자신의 독서 상황과 수준에 맞는 글을 선정하고 읽기 과정을 점검⋅조정하며 읽는다."]]}, {"n": 3, "name": "쓰기", "stds": [["[9국03-01]", "대상의 특성에 적합한 설명 방법을 활용하여 글을 쓴다."], ["[9국03-02]", "복수의 자료를 활용하여 다양한 형식으로 정보를 전달하는 글을 쓴다."], ["[9국03-03]", "주장을 뒷받침할 수 있는 타당한 근거를 들고 적절한 표현을 사용하여 주장하는 글을 쓴다."], ["[9국03-04]", "의견 차이가 있는 사안에 대해 자료를 수집하고 사회⋅문화적 맥락을 고려하며 주장하는 글을 쓴다."], ["[9국03-05]", "자신의 삶과 경험을 바탕으로 정서를 진솔하게 표현하는 글을 쓴다."], ["[9국03-06]", "다양한 표현을 활용하여 자신의 생각과 느낌이 드러나는 글을 쓰고 독자와 공유한다."], ["[9국03-07]", "복합양식 자료를 활용하여 내용을 생성하고 글의 유형을 고려하여 내용을 조직하며 글을 쓴다."], ["[9국03-08]", "쓰기 과정과 전략을 점검⋅조정하며 글을 쓰고, 독자를 고려하여 글을 고쳐 쓴다."], ["[9국03-09]", "언어 공동체의 구성원인 필자로서 자신에 대해 성찰하며, 윤리적 소통 문화를 형성하는 데에 기여한다."]]}, {"n": 4, "name": "문법", "stds": [["[9국04-01]", "국어의 음운 체계와 문자 체계를 이해하고 국어생활에 활용한다."], ["[9국04-02]", "단어의 짜임을 분석하여 새말 형성의 원리를 이해한다."], ["[9국04-03]", "품사의 종류와 특성을 이해하고 국어 자료를 분석한다."], ["[9국04-04]", "문장의 짜임을 이해하고 표현 효과를 고려하여 문장을 구성한다."], ["[9국04-05]", "피동 표현과 인용 표현의 의도와 효과를 분석하고 상황에 맞게 활용한다."], ["[9국04-06]", "한글 맞춤법의 기본 원리와 내용을 이해하고 국어생활에 적용한다."], ["[9국04-07]", "세대⋅분야⋅매체에 따른 어휘의 양상과 쓰임을 분석하고 다양한 집단과 사회의 언어에 관용적 태도를 지닌다."], ["[9국04-08]", "자신과 주변의 다양한 국어 실천 양상을 비판적으로 분석하여 언어와 자아 및 세계 사이의 관계를 인식한다."]]}, {"n": 5, "name": "문학", "stds": [["[9국05-01]", "운율, 비유, 상징의 특성과 효과에 유의하며 작품을 감상하고 창작한다."], ["[9국05-02]", "갈등의 진행과 해결 과정을 파악하며 작품을 감상한다."], ["[9국05-03]", "인간의 성장을 다룬 작품을 읽으며 문학의 가치를 내면화한다."], ["[9국05-04]", "보는 이나 말하는 이의 특성과 효과를 파악하며 작품을 감상한다."], ["[9국05-05]", "작품에 반영된 사회⋅문화적 상황을 이해하며 작품을 감상한다."], ["[9국05-06]", "자신의 경험을 개성적인 발상과 표현으로 형상화한다."], ["[9국05-07]", "연관성이 있는 다른 작품들과의 관계를 파악하며 작품을 감상한다."], ["[9국05-08]", "근거를 바탕으로 작품을 해석하고, 다른 해석들과 비교하여 자신의 해석을 평가한다."], ["[9국05-09]", "문학을 통해 타자를 이해하고 공동체의 문제에 참여하는 태도를 지닌다."]]}, {"n": 6, "name": "매체", "stds": [["[9국06-01]", "대중매체와 개인 인터넷 방송의 특성과 영향력을 비교한다."], ["[9국06-02]", "소통 맥락과 수용자 참여 양상을 고려하여 상호 작용적 매체를 분석한다."], ["[9국06-03]", "복합양식성을 고려하여 영상 매체 자료를 제작하고 공유한다."], ["[9국06-04]", "매체 소통에서의 권리와 책임을 이해하고, 수용자의 반응을 고려하며 매체 자료의 제작 과정을 성찰한다."], ["[9국06-05]", "매체 자료의 재현 방식을 이해하고 광고나 홍보물을 분석한다."], ["[9국06-06]", "사회⋅문화적 맥락을 고려하여 매체 자료의 공정성을 평가한다."]]}]}, {"id": "geo", "name": "사회(지리)", "units": [{"n": 1, "name": "세계화 시대, 지리의 힘", "stds": [["[9사(지리)01-01]", "세계 여러 지역의 특성을 해당 지역의 위치와 자연⋅인문환경을 고려하여 추론한다."], ["[9사(지리)01-02]", "다양한 스케일에서 지역이 서로 연계되어 있음을 공간적 상호 작용의 사례를 통해 파악한다."], ["[9사(지리)01-03]", "세계의 변화가 지역에 영향을 미치고 지역의 변화가 세계에 영향을 미치는 사례를 조사한다."]]}, {"n": 2, "name": "아시아", "stds": [["[9사(지리)02-01]", "다양한 지리 정보와 매체를 활용하여 아시아의 국가와 주요 도시의 위치를 파악하고 자연환경의 특성을 지도로 표현한다."], ["[9사(지리)02-02]", "종교와 관련된 아시아의 다양한 문화경관과 생활양식을 파악하고, 세계시민으로서 문화 다양성에 대한 이해와 수용성을 높인다."], ["[9사(지리)02-03]", "아시아의 인구 특징을 파악하고 지역별 인구 구조 변화를 비교하여 지역 발전의 가능성 및 변화 모습을 추론한다."], ["[9사(지리)02-04]", "글로컬 관점에서 아시아의 산업 특징과 변화를 파악하고, 이것이 우리나라 산업에 미치는 영향을 탐색한다."]]}, {"n": 3, "name": "유럽", "stds": [["[9사(지리)03-01]", "다양한 지리 정보와 매체를 활용하여 유럽의 국가와 주요 도시의 위치를 파악하고 자연환경의 특성을 지도로 표현한다."], ["[9사(지리)03-02]", "다양한 유형의 유럽 도시를 탐색하고, 기후위기에 대응하여 지속가능한 도시를 만들기 위한 노력을 조사한다."], ["[9사(지리)03-03]", "지역 간 역학관계에 따른 유럽의 통합과 분리의 움직임이 유럽연합의 변화와 주민 생활에 미치는 영향을 탐색한다."]]}, {"n": 4, "name": "아프리카", "stds": [["[9사(지리)04-01]", "다양한 지리 정보와 매체를 활용하여 아프리카의 국가와 주요 도시의 위치를 파악하고 자연환경의 특성을 지도로 표현한다."], ["[9사(지리)04-02]", "아프리카의 지리적 특성에 기반한 다양한 문화와 지역 잠재력을 탐구하고, 아프리카에 대한 자신의 인식을 성찰한다."], ["[9사(지리)04-03]", "지속가능한 발전을 위한 아프리카 각 지역의 노력과 세계 다양한 주체들의 협력 사례를 조사하고, 세계시민으로서 우리가 참여할 수 있는 방안을 모색한다."]]}, {"n": 5, "name": "아메리카", "stds": [["[9사(지리)05-01]", "다양한 지리 정보와 매체를 활용하여 아메리카의 국가와 주요 도시의 위치를 파악하고 자연환경의 특성을 지도로 표현한다."], ["[9사(지리)05-02]", "다양한 민족(인종)으로 구성된 아메리카의 인구 특징을 살펴보고, 사례를 들어 아메리카의 문화 혼종성을 설명한다."], ["[9사(지리)05-03]", "초국적 기업의 글로벌 생산체제에 대한 이해를 바탕으로, 초국적 기업의 아메리카 지역 내 입지와 해외 이전의 이유, 그에 따른 해당 지역의 변화를 분석한다."]]}, {"n": 6, "name": "오세아니아와 극지방", "stds": [["[9사(지리)06-01]", "다양한 지리 정보와 매체를 활용하여 오세아니아의 국가와 주요 도시의 위치, 자연환경의 특성을 파악하고, 자원 수출을 중심으로 세계 다른 지역과의 상호연계성을 탐색한다."], ["[9사(지리)06-02]", "태평양 지역이 겪고 있는 환경 문제를 조사하고 그 해결에 참여할 수 있는 방안을 제안한다."], ["[9사(지리)06-03]", "극지방의 지리적 중요성과 지역 개발을 둘러싼 다양한 이해관계를 살펴보고, 이에 대한 자신과 상대방의 의견을 비판적으로 검토한다."]]}, {"n": 7, "name": "대한민국, 우리가 살아가는 곳", "stds": [["[9사(지리)07-01]", "우리 국토의 위치와 영역에 대한 이해를 바탕으로 세계 속에서 우리나라의 위치를 지정학, 지경학적 측면에서 탐색한다."], ["[9사(지리)07-02]", "우리나라 행정구역과 주요 도시의 위치를 파악하고, 자신이 살고 있는 곳의 장소성과 장소감을 표현한다."], ["[9사(지리)07-03]", "다양한 지리 정보와 매체를 활용하여 우리 지역의 문제를 선정하고 지리적으로 시 각화한다."]]}, {"n": 8, "name": "우리나라의 자연환경과 인간 생활", "stds": [["[9사(지리)08-01]", "우리나라 주요 산지⋅하천⋅해안 지형의 위치와 특성을 파악하고, 매력적인 지형 경관을 탐색하여 우리 국토의 아름다움을 느낀다."], ["[9사(지리)08-02]", "우리나라의 계절별, 지역별 기후 특성 및 변화 양상을 파악하고, 기후변화에 대한 지역별 대응 노력을 조사한다."], ["[9사(지리)08-03]", "우리나라 자연재해의 지리적 특성과 피해 최소화를 위한 노력을 파악하고, 일상생활 속 다양한 상황에서 자연재해 발생 시 자신의 대처 방안을 탐색한다."]]}, {"n": 9, "name": "중부 지역", "stds": [["[9사(지리)09-01]", "다양한 지리 정보와 매체를 활용하여 중부 지역의 지리적 특성 및 매력적인 여행 장소들을 탐색한다."], ["[9사(지리)09-02]", "수도권의 공간 구조를 파악하고, 인구⋅문화⋅경제적 측면을 중심으로 수도권의 변화 양상을 탐색한다."], ["[9사(지리)09-03]", "강원⋅충청 지역의 변화를 교통 발달과 수도권과의 관계를 중심으로 파악하고, 강원⋅충청 지역의 산업 변화와 지역경제 활성화를 위한 노력을 조사한다."], ["[9사(지리)09-04]", "수도권과 비수도권 간의 지역 불균형 실태를 지도로 표현하고, 지역 불균형을 완화하기 위한 방안들을 제안한다."]]}, {"n": 10, "name": "남부 지역", "stds": [["[9사(지리)10-01]", "다양한 지리 정보와 매체를 활용하여 남부 지역의 지리적 특성 및 매력적인 여행 장소들을 탐색한다."], ["[9사(지리)10-02]", "글로벌 경제와 우리나라 산업에서 영⋅호남 공업 지역의 위상을 파악하고, 영⋅호남 지역의 산업 변화와 당면 과제를 조사한다."], ["[9사(지리)10-03]", "제주도의 지역 변화와 이를 둘러싼 다양한 가치를 살펴보고 이에 대한 자신과 상대방의 의견을 비판적으로 검토한다."]]}, {"n": 11, "name": "북부 지역", "stds": [["[9사(지리)11-01]", "다양한 지리 정보와 매체를 활용하여 북한의 자연환경과 인문환경의 특징을 탐색한다."], ["[9사(지리)11-02]", "분단이 우리의 일상생활에 미친 영향을 살펴보고, 분리와 연결의 공간으로서 접경지역의 다양한 모습을 세계 여러 지역의 사례를 통해 비교한다."], ["[9사(지리)11-03]", "세계시민의 관점에서 한반도 평화의 중요성을 논의하고, 한반도 평화와 통일 환경 속에서 우리의 삶과 국토의 미래를 구상한다."]]}, {"n": 12, "name": "지속가능한 세계와 글로컬 시민", "stds": [["[9사(지리)12-01]", "우리나라 주요 식량 자원 및 에너지 자원의 소비 현황과 수입국 현황을 분석하여 이와 관련된 문제를 파악하고, 자원의 지속가능한 확보 방안을 모색한다."], ["[9사(지리)12-02]", "지역 개발과 환경 보존을 둘러싼 글로컬 환경 이슈에 관심을 가지고 자신의 웰빙 및 공동체의 지속가능한 발전을 위해 참여하고 실천한다."], ["[9사(지리)12-03]", "더 나은 지역을 만들어 가는 사람들의 노력을 국내외 사례를 통해 살펴보고, 자신이 사는 지역의 문제를 해결하기 위한 방안을 모색하고 이를 실천한다."]]}]}, {"id": "soc", "name": "사회(일반사회)", "units": [{"n": 1, "name": "인간과 사회생활", "stds": [["[9사(일사)01-01]", "사회화의 의미를 일상생활의 사례를 들어 설명하고, 사회화 과정에서 형성되는 자아 정체성에 대해 성찰한다."], ["[9사(일사)01-02]", "사회적 지위와 역할의 의미를 설명하고, 일상생활에서 나타나는 역할 갈등 사례와 대응 방안을 탐색한다."], ["[9사(일사)01-03]", "우리 사회에 나타나는 다양한 갈등과 차별의 사례를 조사하고, 이에 대처하는 시민의 자질에 대해 토의한다."]]}, {"n": 2, "name": "다양한 문화의 이해", "stds": [["[9사(일사)02-01]", "일상생활에서 접하는 문화의 사례를 탐색하고, 이를 바탕으로 문화의 의미와 특징을 도출한다."], ["[9사(일사)02-02]", "우리 주변에서 활용되는 미디어들을 탐색하고, 미디어를 통해 경험하는 다양한 문화와 정보들을 비판적으로 검토한다."], ["[9사(일사)02-03]", "여러 집단에서 나타나는 다양한 문화 사례들을 조사하고, 문화를 이해하는 바람직한 태도에 대하여 토의한다."]]}, {"n": 3, "name": "민주주의와 시민", "stds": [["[9사(일사)03-01]", "공동체 생활에 필요한 정치의 역할을 탐색하고, 다양한 정치 사례를 통해 민주주의의 의미와 필요성을 도출한다."], ["[9사(일사)03-02]", "민주주의의 발전 과정을 검토하고, 이를 토대로 민주주의의 이념과 기본 원리를 도출한다."], ["[9사(일사)03-03]", "현대 민주주의의 특징과 과제를 검토하고, 우리나라 민주주의의 발전을 위한 제도적 방안과 시민의 역할에 대해 토의한다."]]}, {"n": 4, "name": "정치과정과 시민 참여", "stds": [["[9사(일사)04-01]", "선거의 기능과 기본 원칙을 검토하고, 선거 과정에서 유권자와 정당이 수행하는 활동을 조사한다."], ["[9사(일사)04-02]", "정치활동에 참여하는 다양한 정치 주체의 역할을 탐색하고, 정치과정의 의미를 설명한다."], ["[9사(일사)04-03]", "민주주의의 발전을 위한 지방 자치의 중요성을 설명하고, 지역사회의 문제를 해결하기 위한 시민 참여 활동을 계획한다."]]}, {"n": 5, "name": "일상생활과 법", "stds": [["[9사(일사)05-01]", "법의 의미와 특징을 설명하고, 일상생활에서 접하는 법의 사례를 통해 법의 목적을 도출한다."], ["[9사(일사)05-02]", "우리의 일상을 규율하는 다양한 법을 탐색하고, 국내외 사례를 통해 사회법이 필요한 이유에 대해 토의한다."], ["[9사(일사)05-03]", "재판의 의미와 종류를 설명하고, 공정한 재판의 중요성에 대해 토의한다."]]}, {"n": 6, "name": "인권과 기본권", "stds": [["[9사(일사)06-01]", "일상생활에서 인권이 침해되는 사례를 조사하고, 우리 헌법에 보장된 기본권의 종류를 탐색한다."], ["[9사(일사)06-02]", "기본권 제한의 요건과 한계가 헌법에 명시된 이유를 토의하고, 기본권 침해 시 구제 방법을 조사한다."], ["[9사(일사)06-03]", "근로자에게 보장되는 권리를 조사하고, 이러한 권리의 침해에 대처하는 국가와 시민의 노력에 대해 토의한다."]]}, {"n": 7, "name": "헌법과 국가기관", "stds": [["[9사(일사)07-01]", "우리나라의 정부 형태를 설명하고, 대통령과 행정부의 역할을 탐색한다."], ["[9사(일사)07-02]", "국회에서 법률이 만들어지는 사례를 탐색하고, 입법기관으로서 국회의 역할을 조사한다."], ["[9사(일사)07-03]", "사법기관으로서 법원의 역할을 검토하고, 헌법재판소의 성격에 대해 토의한다."]]}, {"n": 8, "name": "경제생활과 선택", "stds": [["[9사(일사)08-01]", "경제생활에서 합리적 선택의 필요성에 대해 검토하고, 비용과 편익을 고려한 합리적 선택 방안을 탐색한다."], ["[9사(일사)08-02]", "일생 동안 이루어지는 경제생활을 분석하고, 안정적인 금융 생활을 위한 자산 및 신용 관리 방안을 계획한다."], ["[9사(일사)08-03]", "시장경제에서 기업의 역할과 사회적 책임을 설명하고, 우리 사회에 필요한 기업가 정신에 대해 토의한다."]]}, {"n": 9, "name": "시장과 가격", "stds": [["[9사(일사)09-01]", "일상생활에서 접하는 다양한 시장의 사례를 조사하고, 이를 토대로 시장의 의미와 필요성을 설명한다."], ["[9사(일사)09-02]", "수요 법칙과 공급 법칙을 사례를 통해 도출하고, 이를 토대로 시장 가격이 결정되는 원리를 설명한다."], ["[9사(일사)09-03]", "시장경제에서 수요와 공급을 변화시키는 요인을 조사하고, 시장 가격의 변동에 대응하는 방안을 계획한다."]]}, {"n": 10, "name": "우리나라 경제와 세계화", "stds": [["[9사(일사)10-01]", "우리나라의 경제 성장 전후 모습을 검토하고, 국내 총생산의 증가가 우리 생활에 미치는 영향에 대해 토의한다."], ["[9사(일사)10-02]", "물가 변동과 실업의 사례를 탐색하고 물가 변동과 실업이 우리 생활에 미치는 영향을 제시한다."], ["[9사(일사)10-03]", "세계화 시대에 국제 거래가 이루어지는 사례를 탐색하고, 환율 변동이 우리 생활에 미치는 영향을 조사한다."]]}, {"n": 11, "name": "국제 사회와 한반도", "stds": [["[9사(일사)11-01]", "국제 사회를 구성하는 여러 행위 주체의 활동을 조사하고, 이를 토대로 국제 사회의 특징을 도출한다."], ["[9사(일사)11-02]", "국제 사회의 다양한 분쟁에 대해 조사하고, 지역, 국가, 세계의 시민으로서 우리의 역할에 대해 토의한다."], ["[9사(일사)11-03]", "우리나라가 직면하고 있는 국제 문제에 대해 조사하고, 이러한 문제에 대응하기 위한 방안에 대해 토론한다."]]}, {"n": 12, "name": "사회 변동과 사회문제", "stds": [["[9사(일사)12-01]", "오늘날 우리 사회가 겪는 사회 변동에 대해 조사하고, 이러한 사회 변동이 우리 생활에 미치는 영향을 분석한다."], ["[9사(일사)12-02]", "오늘날의 주요한 사회문제를 조사하고, 이러한 사회문제가 우리 생활에 미치는 영향에 대해 토의한다."], ["[9사(일사)12-03]", "사회 변동과 사회문제에 대응하는 국내외의 사례들을 검토하고, 시민으로서 지녀야 할 태도와 실천 방안에 대해 토의한다."]]}]}, {"id": "his", "name": "역사", "units": [{"n": 1, "name": "역사 학습의 기초", "stds": [["[9역01-01]", "역사와 역사 탐구의 의미를 파악하고, 역사 학습의 목적을 다각도로 탐색한다."], ["[9역01-02]", "다양한 자료와 사례를 통해 역사 탐구 방법을 익힌다."]]}, {"n": 2, "name": "문명의 발생과 고대 세계의 형성", "stds": [["[9역02-01]", "선사 문화 및 문명의 형성을 이해하고, 각 문명의 특징을 비교한다."], ["[9역02-02]", "서아시아⋅지중해 세계에서 등장한 여러 정치체를 비교하고 종교 및 문화를 탐구한다."], ["[9역02-03]", "중국과 인도의 정치적 변화와 종교⋅사상 성립의 관계를 이해하고, 유라시아의 상호 교류를 탐색한다."]]}, {"n": 3, "name": "세계 종교의 확산과 지역 문화의 발전", "stds": [["[9역03-01]", "수⋅당 시기 동아시아 국제 질서의 특징을 이해하고, 동아시아 문화를 탐구한다."], ["[9역03-02]", "인도, 서아시아, 지중해에서 진행된 정치적 변동 과정과 각 종교의 특징 및 영향을 파악한다."], ["[9역03-03]", "크리스트교 세계의 정치와 종교의 상관성을 이해하고, 이슬람 세계와 크리스트교 세계의 충돌 및 교류의 결과를 탐구한다."]]}, {"n": 4, "name": "지역 세계의 교류와 변화", "stds": [["[9역04-01]", "송과 몽골 제국 시기 유라시아⋅인도양 교역권의 성장을 경제⋅문화 자료를 통해 탐구한다."], ["[9역04-02]", "명⋅청, 에도 막부, 무굴 제국의 정치⋅사회 변화를 비교한다."], ["[9역04-03]", "오스만 제국의 성장과 유럽 사회의 근대적 변화를 조사한다."]]}, {"n": 5, "name": "제국주의와 국민 국가 건설 운동", "stds": [["[9역05-01]", "시민 혁명을 국민 국가 형성과 연결하여 파악하고, 역사적 의의와 한계를 탐구한다."], ["[9역05-02]", "서양의 산업화와 제국주의 정책을 이해하고, 사회와 생태환경에 미친 영향을 분석한다."], ["[9역05-03]", "제국주의 열강의 침략에 대한 아시아의 대응 및 국민 국가 건설 노력을 이해하고, 그 성과와 한계를 평가한다."]]}, {"n": 6, "name": "세계 대전과 사회 변동", "stds": [["[9역06-01]", "20세기 전반 세계 질서의 변화를 두 차례의 세계 대전을 중심으로 파악한다."], ["[9역06-02]", "세계 대전 중의 전쟁 범죄를 탐구하고, 인권 회복과 평화 실현을 위한 노력을 조사한다."], ["[9역06-03]", "아시아⋅아프리카 지역의 민족 운동을 이해하고, 그 특징을 비교한다."]]}, {"n": 7, "name": "현대 세계의 전개와 과제", "stds": [["[9역07-01]", "냉전의 전개와 제3 세계 등장의 상관관계를 이해하고, 냉전 이후 국제 질서의 변화를 분석한다."], ["[9역07-02]", "20세기 후반 민주주의와 인권의 신장을 위한 노력에 관심을 갖는다."], ["[9역07-03]", "오늘날 세계화의 양상을 조사하고, 성과와 과제를 탐구한다."]]}, {"n": 8, "name": "국가의 형성과 발전", "stds": [["[9역08-01]", "고조선과 여러 나라의 형성 과정 및 사회 모습을 탐구한다."], ["[9역08-02]", "삼국과 가야의 성장 과정을 파악한다."], ["[9역08-03]", "삼국과 가야가 남긴 문화의 특징을 분석한다."]]}, {"n": 9, "name": "통일신라와 발해", "stds": [["[9역09-01]", "삼국 통일의 과정을 동아시아 국제 정세의 맥락에서 이해하고, 통일신라와 발해 성립의 역사적 의의를 추론한다."], ["[9역09-02]", "통일신라와 발해의 국가 체제 정비와 변동을 분석한다."], ["[9역09-03]", "통일신라와 발해 문화의 특징을 파악한다."]]}, {"n": 10, "name": "고려의 성립과 변천", "stds": [["[9역10-01]", "후삼국 통일과 체제 정비 과정을 통해 고려 성립의 역사적 의미를 탐색한다."], ["[9역10-02]", "고려의 정치적 변동을 파악하고 주변국과의 관계를 이해한다."], ["[9역10-03]", "원 간섭기 고려 사회에 나타난 변화를 파악하고 개혁의 영향을 탐구한다."], ["[9역10-04]", "고려의 문화유산과 대외 교류의 사례를 조사하여 그 특징을 파악한다."]]}, {"n": 11, "name": "조선의 성립과 발전", "stds": [["[9역11-01]", "조선 성립의 의의를 통치 체제의 특징을 통해 파악한다."], ["[9역11-02]", "사림 세력의 성장이 성리학적 질서 확산에 끼친 영향을 추론한다."], ["[9역11-03]", "왜란과 호란의 성격을 동아시아 국제 정세 속에서 분석한다."]]}, {"n": 12, "name": "조선 사회의 변동", "stds": [["[9역12-01]", "왜란과 호란 이후 체제 재정비의 노력과 정치 변동의 모습을 파악한다."], ["[9역12-02]", "조선 후기 문화에서 나타난 변화를 분석한다."], ["[9역12-03]", "조선 후기 사회적 모순에 대한 여러 세력의 대응을 탐구한다."]]}, {"n": 13, "name": "근⋅현대 사회로의 전환", "stds": [["[9역13-01]", "개항 이후 근대 국가를 건설하기 위한 노력을 파악한다."], ["[9역13-02]", "국권 피탈 이후 전개된 민족 운동을 세계사적 관점에서 이해한다."], ["[9역13-03]", "한국의 민주화 과정에서 나타난 성과와 과제를 탐구한다."], ["[9역13-04]", "지속가능한 사회를 위한 과제를 역사적 맥락에서 탐구하고, 과제 해결에 참여하는 자세를 갖는다."]]}]}, {"id": "eth", "name": "도덕", "units": [{"n": 1, "name": "자신과의 관계", "stds": [["[9도01-01]", "자신의 삶과 가치관에 대한 성찰을 통해 자아를 올바로 이해하고, 삶에서 도덕이 필요한 이유에 근거하여 도덕적인 삶에 대한 의지를 기른다."], ["[9도01-02]", "일상에서 발생하는 부도덕한 행동의 여러 원인을 분석하고, 도덕적 인격이 갖추어야 할 특성들을 파악하여 이를 내면화하는 의지를 기른다."], ["[9도01-03]", "행복에 관한 심리적, 사회적, 윤리적 접근 등을 통해 행복의 의미를 종합적으로 파악하고, 삶의 목적과 행복의 관계를 정립할 수 있다."], ["[9도01-04]", "옳고 그름을 분별할 수 있는 도덕적 기준을 탐구하고, 도덕적 상상력을 바탕으로 일상의 도덕 문제들에 도덕적 추론을 적용할 수 있다."], ["[9도01-05]", "삶의 유한함에 관한 성찰을 통해 생명의 소중함과 의미 있는 삶의 중요성을 인식하고, 자신의 미래 모습을 상상하며 삶을 계획하고 이를 실천하는 의지를 기른다."], ["[9도01-06]", "내면에 대한 성찰을 통해 심리적 고통과 불안, 우울감 등의 원인을 찾고, 마음의 평온을 얻을 수 있는 방안들을 다각적으로 모색하여 실천할 수 있다."], ["[9도01-07]", "삶에서 직업이 갖는 의미와 가치를 파악하며, 사례 탐구를 통해 직업적 양심과 직업윤리의 필요성을 정당화할 수 있다."]]}, {"n": 2, "name": "타인과의 관계", "stds": [["[9도02-01]", "정서적, 배려적 공동체로서 가정의 특성과 도덕적 기능을 파악하고, 가정에서 발생하는 갈등을 공감적인 소통과 민주적인 과정을 통해 해소하는 의지를 기른다."], ["[9도02-02]", "친구의 의미와 가치를 삶의 맥락 속에서 탐구하고, 서로를 인격적으로 존중하는 친구 관계를 상상하며 이를 실현하는 의지를 기른다."], ["[9도02-03]", "가상공간과 현실 세계에 대한 비교⋅분석을 바탕으로 가상공간에서 발생하는 도덕 문제들의 원인과 해결 방안을 제안하고, 타인을 존중하며 가상공간을 활용하는 태도를 함양한다."], ["[9도02-04]", "인간을 관계적 존재로 해석할 수 있는 이유에 근거하여 타인과의 관계에서 필요한 가치⋅ 덕목을 탐구하고, 타인의 생각과 감정에 공감하는 태도를 기른다."], ["[9도02-05]", "다양한 갈등 상황을 평화적으로 해결할 수 있는 방안을 모색하고, 폭력의 유형과 원인, 결과에 대한 분석을 바탕으로 일상의 폭력 상황에 대한 대처 능력을 기른다."], ["[9도02-06]", "청소년기의 바람직한 성윤리를 탐구하여 내면화하고, 사회⋅문화적 차원에서 성의 의미를 파악하여 성에 대한 편견의 문제점을 분석하고 이를 바로잡는 의지를 기른다."]]}, {"n": 3, "name": "사회⋅공동체와의 관계", "stds": [["[9도03-01]", "인권을 존중해야 하는 도덕적 이유를 정당화하고, 인권 침해 사례에 대한 탐구를 통해 그 원인과 해결 방안을 도출함으로써 인권 감수성을 기른다."], ["[9도03-02]", "외집단에 대한 편견을 비판적으로 분석하고, 타문화⋅타종교⋅타인종을 존중해야 하는 이유에 근거하여 차이와 다양성에 대한 열린 마음을 기른다."], ["[9도03-03]", "북한에 대한 이해를 바탕으로 분단의 문제점을 분석하고, 도덕적 가치에 기초하여 통일의 의미를 재구성함으로써 바람직한 남북관계 및 통일의 방향을 제안할 수 있다."], ["[9도03-04]", "정의로운 사회를 상상해보고, 이를 실현할 수 있는 정의의 원칙과 제도에 대한 다양한 의견들을 민주적인 방식으로 종합할 수 있다."], ["[9도03-05]", "국가와 시민 사이에서 발생하는 윤리적 쟁점들을 탐구하고, 국가와 시민 사이의 바람직한 관계에 기초하여 국가와 시민의 역할을 재구성할 수 있다."], ["[9도03-06]", "인류의 고통에 공감하며 지구적 차원의 다양한 도덕 문제들을 탐구하고, 해결 방안을 모색하여 실천하는 자세를 갖는다."], ["[9도03-07]", "현대 과학기술과 관련된 윤리적 쟁점의 분석을 통해 과학기술의 유용성과 한계를 인식하고, 과학기술의 바람직한 활용에 관한 관심과 책임 의식을 기른다."]]}, {"n": 4, "name": "자연과의 관계", "stds": [["[9도04-01]", "인간 이외의 생명체를 도덕적으로 고려해야 하는 이유를 정당화하고, 생명을 가진 존재 들이 겪는 고통에 공감하며 생명을 소중히 여기는 태도를 기른다."], ["[9도04-02]", "자연에 대한 동양과 서양의 주요 입장들을 토대로 인간과 자연의 바람직한 관계를 도출하고, 환경 위기에 대한 윤리적 책임을 구체화하여 실천할 수 있다."]]}]}, {"id": "math", "name": "수학", "units": [{"n": 1, "name": "수와 연산", "stds": [["[9수01-01]", "소인수분해의 뜻을 알고, 자연수를 소인수분해 할 수 있다."], ["[9수01-02]", "소인수분해를 이용하여 최대공약수와 최소공배수를 구할 수 있다."], ["[9수01-03]", "다양한 상황을 이용하여 음수의 필요성을 인식하고, 양수와 음수, 정수와 유리수의 개념을 이해한다."], ["[9수01-04]", "정수와 유리수의 대소 관계를 판단할 수 있다."], ["[9수01-05]", "정수와 유리수의 사칙계산의 원리를 이해하고, 그 계산을 할 수 있다."], ["[9수01-06]", "순환소수의 뜻을 알고, 유리수와 순환소수의 관계를 설명할 수 있다."], ["[9수01-07]", "제곱근의 뜻과 성질을 알고, 제곱근의 대소 관계를 판단할 수 있다."], ["[9수01-08]", "무리수의 개념을 이해하고, 무리수의 유용성을 인식할 수 있다."], ["[9수01-09]", "실수의 대소 관계를 판단하고 설명할 수 있다."], ["[9수01-10]", "근호를 포함한 식의 사칙계산의 원리를 이해하고, 그 계산을 할 수 있다."]]}, {"n": 2, "name": "변화와 관계", "stds": [["[9수02-01]", "다양한 상황을 문자를 사용한 식으로 나타내어 그 유용성을 인식하고, 식의 값을 구할 수 있다."], ["[9수02-02]", "일차식의 덧셈과 뺄셈의 원리를 이해하고, 그 계산을 할 수 있다."], ["[9수02-03]", "방정식과 그 해의 뜻을 알고, 등식의 성질을 설명할 수 있다."], ["[9수02-04]", "일차방정식을 풀 수 있고, 이를 활용하여 문제를 해결할 수 있다."], ["[9수02-05]", "순서쌍과 좌표를 이해하고, 그 편리함을 인식할 수 있다."], ["[9수02-06]", "다양한 상황을 그래프로 나타내고, 주어진 그래프를 해석할 수 있다."], ["[9수02-07]", "정비례, 반비례 관계를 이해하고, 그 관계를 표, 식, 그래프로 나타낼 수 있다."], ["[9수02-08]", "지수법칙을 이해하고, 이를 이용하여 식을 간단히 할 수 있다."], ["[9수02-09]", "다항식의 덧셈과 뺄셈의 원리를 이해하고, 그 계산을 할 수 있다."], ["[9수02-10]", "‘(단항식)× (다항식)’, ‘(다항식)÷ (단항식)’과 같은 곱셈과 나눗셈의 원리를 이해하고, 그 계산을 할 수 있다."], ["[9수02-11]", "부등식과 그 해의 뜻을 알고, 부등식의 성질을 설명할 수 있다."], ["[9수02-12]", "일차부등식을 풀 수 있고, 이를 활용하여 문제를 해결할 수 있다."], ["[9수02-13]", "미지수가 2개인 연립일차방정식을 풀 수 있고, 이를 활용하여 문제를 해결할 수 있다."], ["[9수02-14]", "함수의 개념을 이해하고, 함숫값을 구할 수 있다."], ["[9수02-15]", "일차함수의 개념을 이해하고, 그 그래프를 그릴 수 있다."], ["[9수02-16]", "일차함수의 그래프의 성질을 이해하고, 이를 활용하여 문제를 해결할 수 있다."], ["[9수02-17]", "일차함수와 미지수가 2개인 일차방정식의 관계를 설명할 수 있다."], ["[9수02-18]", "두 일차함수의 그래프와 연립일차방정식의 관계를 설명할 수 있다."], ["[9수02-19]", "다항식의 곱셈과 인수분해를 할 수 있다."], ["[9수02-20]", "이차방정식을 풀 수 있고, 이를 활용하여 문제를 해결할 수 있다."], ["[9수02-21]", "이차함수의 개념을 이해한다."], ["[9수02-22]", "이차함수의 그래프를 그릴 수 있고, 그 성질을 설명할 수 있다."]]}, {"n": 3, "name": "도형과 측정", "stds": [["[9수03-01]", "점, 선, 면, 각을 이해하고, 실생활 상황과 연결하여 점, 직선, 평면의 위치 관계를 설명할 수 있다."], ["[9수03-02]", "평행선에서 동위각과 엇각의 성질을 이해하고 설명할 수 있다."], ["[9수03-03]", "삼각형을 작도하고, 그 과정을 설명할 수 있다."], ["[9수03-04]", "삼각형의 합동 조건을 이해하고, 이를 이용하여 두 삼각형이 합동인지 판별할 수 있다."], ["[9수03-05]", "다각형의 성질을 이해하고 설명할 수 있다."], ["[9수03-06]", "부채꼴의 중심각과 호의 관계를 이해하고, 이를 이용하여 부채꼴의 호의 길이와 넓이를 구할 수 있다."], ["[9수03-07]", "구체적인 모형이나 공학 도구를 이용하여 다면체와 회전체의 성질을 탐구하고, 이를 설명할 수 있다."], ["[9수03-08]", "입체도형의 겉넓이와 부피를 구할 수 있다."], ["[9수03-09]", "이등변삼각형의 성질을 이해하고 정당화할 수 있다."], ["[9수03-10]", "삼각형의 외심과 내심의 성질을 이해하고 정당화할 수 있다."], ["[9수03-11]", "사각형의 성질을 이해하고 정당화할 수 있다."], ["[9수03-12]", "도형의 닮음의 뜻과 닮은 도형의 성질을 이해하고, 닮음비를 구할 수 있다."], ["[9수03-13]", "삼각형의 닮음 조건을 이해하고, 이를 이용하여 두 삼각형이 닮음인지 판별할 수 있다."], ["[9수03-14]", "평행선 사이의 선분의 길이의 비를 구할 수 있다."], ["[9수03-15]", "피타고라스 정리를 이해하고 정당화할 수 있다."], ["[9수03-16]", "삼각비의 뜻을 알고, 간단한 삼각비의 값을 구할 수 있다."], ["[9수03-17]", "삼각비를 활용하여 여러 가지 문제를 해결할 수 있다."], ["[9수03-18]", "원의 현에 관한 성질과 접선에 관한 성질을 이해하고 정당화할 수 있다."], ["[9수03-19]", "원주각의 성질을 이해하고 정당화할 수 있다."]]}, {"n": 4, "name": "자료와 가능성", "stds": [["[9수04-01]", "중앙값, 최빈값의 뜻을 알고, 자료의 특성에 따라 적절한 대푯값을 선택하여 구할 수 있다."], ["[9수04-02]", "자료를 줄기와 잎 그림, 도수분포표, 히스토그램, 도수분포다각형으로 나타내고 해석할 수 있다."], ["[9수04-03]", "상대도수를 구하고, 상대도수의 분포를 표나 그래프로 나타내고 해석할 수 있다."], ["[9수04-04]", "통계적 탐구 문제를 설정하고, 공학 도구를 이용하여 자료를 수집하여 분석하고, 그 결과를 해석할 수 있다."], ["[9수04-05]", "경우의 수를 구할 수 있다."], ["[9수04-06]", "확률의 개념과 그 기본 성질을 이해하고, 확률을 구할 수 있다."], ["[9수04-07]", "분산과 표준편차를 구하고 자료의 분포를 설명할 수 있다."], ["[9수04-08]", "공학 도구를 이용하여 자료를 상자그림으로 나타내고 분포를 비교할 수 있다."], ["[9수04-09]", "자료를 산점도로 나타내고 상관관계를 말할 수 있다."]]}]}, {"id": "sci", "name": "과학", "units": [{"n": 1, "name": "과학과 인류의 지속가능한 삶", "stds": [["[9과01-01]", "과학적 탐구 방법을 이해하고, 일상생활의 문제에 대한 과학적 해결 방안을 제안할 수 있다."], ["[9과01-02]", "과학의 발전이 인류 문명에 미친 영향을 이해하고, 인공지능 등 첨단 과학기술이 가져올 미래 사회의 변화를 조사하여 발표할 수 있다."], ["[9과01-03]", "인류의 지속가능한 삶을 위한 과학기술의 중요성과 역할에 대해 토의하고, 개인과 사회 차원의 활동 방안을 찾아 실천할 수 있다."]]}, {"n": 2, "name": "생물의 구성과 다양성", "stds": [["[9과02-01]", "세포는 생명 활동이 일어나는 기본 단위임을 이해하고, 세포의 구조와 기능의 관계를 추론할 수 있다."], ["[9과02-02]", "생물의 유기적 구성 단계를 이해하고, 동물과 식물을 비교하여 분석할 수 있다."], ["[9과02-03]", "생물다양성을 이해하고, 변이와 생물다양성의 관계를 추론할 수 있다."], ["[9과02-04]", "종의 개념과 분류 체계를 이해하고, 생물을 계 수준에서 분류할 수 있다."], ["[9과02-05]", "생물다양성 보전의 필요성을 이해하고, 생물다양성 유지를 위한 방안을 조사하고 실천할 수 있다."]]}, {"n": 3, "name": "열", "stds": [["[9과03-01]", "온도와 열평형 과정을 물질을 구성하는 입자들의 배치나 움직임 등으로 설명할 수 있다."], ["[9과03-02]", "열은 전도, 대류, 복사로 전달됨을 알고, 열전달 과정을 모형 등을 사용하여 다양하게 표현할 수 있다."], ["[9과03-03]", "물질에 따라 비열과 열팽창 정도가 다름을 알고, 이러한 성질이 일상생활에서 유용하게 활용됨을 인식할 수 있다."]]}, {"n": 4, "name": "물질의 상태 변화", "stds": [["[9과04-01]", "확산 및 증발 현상을 관찰하여 물질을 구성하는 입자가 운동하고 있음을 추론할 수 있다."], ["[9과04-02]", "물질의 세 가지 상태의 특징을 설명하고, 이를 입자 모형으로 표현할 수 있다."], ["[9과04-03]", "여러 가지 물질의 상태 변화를 관찰하고, 이를 입자 모형으로 설명할 수 있다."], ["[9과04-04]", "물질의 상태 변화와 열에너지 출입 관계를 이해하고, 이를 실생활에 적용하여 과학의 유용성을 인식할 수 있다."]]}, {"n": 5, "name": "힘의 작용", "stds": [["[9과05-01]", "물체에 작용하는 힘을 화살표를 이용하여 나타내고, 힘의 평형을 이루는 조건을 설명할 수 있다."], ["[9과05-02]", "중력, 탄성력, 마찰력, 부력을 이해하고, 각 힘의 특징을 크기와 방향으로 설명할 수 있다."], ["[9과05-03]", "알짜힘이 0이 아닐 때 물체의 운동 상태가 변함을 알고, 그 예를 조사하여 분류할 수 있다."], ["[9과05-04]", "다양한 사례에서 작용하는 힘과 힘의 평형 관계를 설명하고, 일상생활에서 힘의 특징을 이용한 기구나 장치를 설계할 수 있다."]]}, {"n": 6, "name": "기체의 성질", "stds": [["[9과06-01]", "압력의 의미를 알고, 기체의 압력을 입자의 운동으로 설명할 수 있다."], ["[9과06-02]", "기체의 압력과 부피 관계를 실험 결과로부터 알아내고, 이를 입자 모형으로 해석할 수 있다."], ["[9과06-03]", "기체의 온도와 부피 관계를 실험 결과로부터 알아내고, 이를 입자 모형으로 해석할 수 있다."]]}, {"n": 7, "name": "태양계", "stds": [["[9과07-01]", "태양계를 구성하는 천체의 특징을 알고, 행성을 목성형 행성과 지구형 행성으로 구분할 수 있다."], ["[9과07-02]", "태양의 표면과 대기에서 일어나는 현상을 알고, 태양의 활동이 지구에 미치는 영향을 추론할 수 있다."], ["[9과07-03]", "지구 자전에 의한 천체의 겉보기 운동과 지구 공전에 의한 별자리 변화를 이해하고, 밤하늘 천체에 호기심을 가진다."], ["[9과07-04]", "달을 관측하여 달의 위상변화 원리를 이해하고, 일식과 월식을 설명할 수 있다."]]}, {"n": 8, "name": "물질의 특성", "stds": [["[9과08-01]", "물질의 특성의 의미를 알고, 실험을 통해 밀도, 용해도, 녹는점, 끓는점 등을 설명할 수 있다."], ["[9과08-02]", "물질의 특성을 근거로 우리 주변의 물질을 순물질과 혼합물로 분류할 수 있다."], ["[9과08-03]", "물질의 특성을 이용하여 혼합물이 분리되는 원리를 이해하고, 이를 이용한 사례를 주변에서 찾을 수 있다."]]}, {"n": 9, "name": "지권의 변화", "stds": [["[9과09-01]", "지구계의 구성 요소를 알고, 지권의 층상 구조와 그 특징을 조사⋅발표할 수 있다."], ["[9과09-02]", "조암 광물의 주요 특성을 관찰하고, 암석과 광물의 활용 방안 및 자원으로서 가치에 대해 조사할 수 있다."], ["[9과09-03]", "지각을 이루는 암석을 생성 과정에 따라 분류하고, 암석의 순환 과정을 설명할 수 있다."], ["[9과09-04]", "풍화 과정을 이해하고, 토양 생성 과정을 풍화 작용의 예로 설명할 수 있다."], ["[9과09-05]", "대륙이동설을 이해하고, 지진과 화산이 발생하는 지역의 분포를 판의 경계와 관련지어 설명할 수 있다."]]}, {"n": 10, "name": "빛과 파동", "stds": [["[9과10-01]", "빛의 반사와 굴절의 원리를 이해하고, 물체를 보는 과정을 빛의 경로를 이용하여 표현할 수 있다."], ["[9과10-02]", "평면거울에서 상이 생기는 원리를 설명하고, 일상생활에서 사용되는 거울과 렌즈의 종류를 분류하고 상의 특징을 비교할 수 있다."], ["[9과10-03]", "물체의 색을 빛의 반사와 관련지어 설명하고, 영상 장치에서 빛의 합성을 이용하여 다양한 색이 표현되는 원리를 이해할 수 있다."], ["[9과10-04]", "파동의 발생과 전달 과정을 이해하고, 소리의 특성을 진폭, 진동수, 파형 등의 과학적 용어로 표현할 수 있다."]]}, {"n": 11, "name": "물질의 구성", "stds": [["[9과11-01]", "원소와 화합물의 정의를 알고, 원소와 화합물을 화학식으로 표현할 수 있다."], ["[9과11-02]", "원소를 구성하는 입자인 원자는 양성자, 중성자, 전자로 구성되며, 양성자의 수에 따라 원소의 종류가 달라짐을 입자 모형을 활용하여 설명할 수 있다."], ["[9과11-03]", "원소는 양성자의 수에 따라 주기율표에 배치됨을 알고, 주기율표에서 성질이 유사한 원소를 찾을 수 있다."], ["[9과11-04]", "물질을 이루는 입자는 원자, 분자, 이온 등으로 존재할 수 있음을 알고, 이온은 전하를 띠고 있음을 설명할 수 있다."]]}, {"n": 12, "name": "식물과 에너지", "stds": [["[9과12-01]", "광합성 과정을 이해하고, 환경 요인과 광합성의 관계를 탐구하는 실험을 설계할 수 있다."], ["[9과12-02]", "식물의 호흡과 광합성의 관계를 이해하고, 호흡과 광합성 과정에서 출입하는 에너지와 물질의 변화를 분석할 수 있다."], ["[9과12-03]", "광합성 산물의 저장과 이용 과정을 이해하고, 모형으로 설명할 수 있다."]]}, {"n": 13, "name": "동물과 에너지", "stds": [["[9과13-01]", "소화계의 구조와 기능을 이해하고, 소화 과정을 소화 효소의 작용과 관련지어 추론할 수 있다."], ["[9과13-02]", "순환계의 구조와 기능을 이해하고, 혈액의 순환 경로를 종합하여 발표할 수 있다."], ["[9과13-03]", "호흡계의 구조와 기능을 이해하고, 호흡 운동의 원리를 나타내는 모형을 만들 수 있다."], ["[9과13-04]", "배설계의 구조와 기능을 이해하고, 노폐물이 배설되는 과정을 모식도로 표현할 수 있다."], ["[9과13-05]", "동물이 세포호흡을 통해 에너지를 얻는 과정을 소화, 순환, 호흡, 배설과 관련지어 통합적으로 설명할 수 있다."]]}, {"n": 14, "name": "전기와 자기", "stds": [["[9과14-01]", "마찰 전기, 정전기 유도 현상을 관찰하고, 이를 전기력과 원자 모형을 이용하여 설명할 수 있다."], ["[9과14-02]", "전기 회로에서 전류를 모형으로 설명하고, 실험을 통해 저항, 전류, 전압 사이의 관계를 이끌어낼 수 있다."], ["[9과14-03]", "저항의 직렬연결과 병렬연결의 특징을 비교하고, 일상생활에서 전기 에너지가 다양한 형태의 에너지로 전환됨을 소비 전력과 관련지어 설명할 수 있다."], ["[9과14-04]", "자기장 안에 놓인 전류가 흐르는 코일이 받는 힘의 특성을 추리하고, 전동기 등 일상생활에서 활용한 예를 찾을 수 있다."]]}, {"n": 15, "name": "별과 우주", "stds": [["[9과15-01]", "연주시차를 이용하여 별까지의 거리를 구할 수 있고, 별의 등급과 밝기의 관계 및 표면 온도와 색의 관계를 설명할 수 있다."], ["[9과15-02]", "우리은하의 구조와 크기를 이해하고, 성운과 성단의 특징을 비교할 수 있다."], ["[9과15-03]", "모형을 이용하여 우주가 팽창하고 있음을 설명할 수 있다."], ["[9과15-04]", "우주탐사의 의의와 인류에게 미치는 영향을 조사하여 과학의 유용성을 인식할 수 있다."]]}, {"n": 16, "name": "화학 반응의 규칙성", "stds": [["[9과16-01]", "물리 변화와 화학 변화의 의미를 알고, 화학 변화에서 새로운 물질이 생성됨을 관찰할 수 있다."], ["[9과16-02]", "간단한 화학 반응을 화학 반응식으로 표현하고, 화학 반응식에서 계수의 비를 입자 수의 비로 해석할 수 있다."], ["[9과16-03]", "화학 반응에서 질량이 보존됨을 실험을 통해 추론할 수 있다."], ["[9과16-04]", "화합물을 구성하는 성분 원소의 질량비가 일정함을 실험 자료를 해석하여 설명할 수 있다."], ["[9과16-05]", "기체 반응에서 기체 부피 사이의 비가 일정함을 실험 자료를 해석하여 설명할 수 있다."], ["[9과16-06]", "화학 반응에서 열에너지가 출입함을 알고, 생활 속 사례를 조사하여 발표할 수 있다."]]}, {"n": 17, "name": "날씨와 기후변화", "stds": [["[9과17-01]", "지구 대기권을 4개 권역으로 구분하며, 온실효과와 지구온난화를 복사 평형의 관점으로 설명할 수 있다."], ["[9과17-02]", "대기 대순환에서 위도별 바람의 특성을 파악하고, 대기 대순환의 역할을 설명할 수 있다."], ["[9과17-03]", "상대습도, 단열 팽창 및 응결 현상의 관계를 이해하고, 구름의 생성과 강수 과정을 설명할 수 있다."], ["[9과17-04]", "기압, 기단, 전선의 개념을 이해하고, 일기도에서 저기압과 고기압의 분포에 따른 날씨를 해석할 수 있다."]]}, {"n": 18, "name": "수권과 해수의 순환", "stds": [["[9과18-01]", "수권에서 해수, 담수, 빙하의 분포와 활용 사례를 조사하고, 자원으로서 물의 가치에 대해 토론할 수 있다."], ["[9과18-02]", "해수의 수온과 염분의 분포 및 변화를 해석하여 해수의 특성을 설명할 수 있다."], ["[9과18-03]", "대기 대순환과 해양 표층 순환과의 관계를 이해하고, 기후변화에 영향을 미치는 해류의 역할을 설명할 수 있다."]]}, {"n": 19, "name": "운동과 에너지", "stds": [["[9과19-01]", "직선상에서 움직이는 물체의 운동을 그래프로 나타내고 해석할 수 있다."], ["[9과19-02]", "자유 낙하하는 물체의 운동에서 시간에 따른 속력의 변화가 일정함을 분석할 수 있다."], ["[9과19-03]", "일의 정의를 알고, 자유 낙하하는 물체의 운동에서 중력이 한 일을 위치 에너지와 운동 에너지로 표현할 수 있다."], ["[9과19-04]", "물체의 운동에서 역학적 에너지의 전환과 보존을 이해하고, 이를 활용하여 일상생활 속 물체의 운동을 예측할 수 있다."]]}, {"n": 20, "name": "자극과 반응", "stds": [["[9과20-01]", "감각기관의 구조와 기능을 이해하고, 실험을 통해 자극이 뇌로 전달되는 과정을 추론할 수 있다."], ["[9과20-02]", "뉴런과 신경계의 구조와 기능을 이해하고, 자극에서 반응이 일어나기까지의 과정을 모형으로 설명할 수 있다."], ["[9과20-03]", "우리 몸의 기능 조절에 호르몬이 관여함을 알고, 관련 자료를 조사하여 발표할 수 있다."]]}, {"n": 21, "name": "생식과 유전", "stds": [["[9과21-01]", "개체의 생장에 세포분열이 필요한 이유를 세포의 표면적과 부피의 관계로 추론할 수 있다."], ["[9과21-02]", "염색체와 유전자의 관계를 이해하고, 체세포분열과 생식세포 형성과정의 특징을 염색체 행동을 중심으로 해석할 수 있다."], ["[9과21-03]", "수정란으로부터 개체가 발생하는 과정을 모형으로 표현할 수 있다."], ["[9과21-04]", "멘델 유전 실험의 의의와 원리를 이해하고, 멘델 유전 원리가 적용되는 유전 현상을 조사하여 협력적으로 소통할 수 있다."], ["[9과21-05]", "사람의 유전 형질과 유전 연구 방법을 알고, 가계도를 분석하여 사람의 유전 현상을 설명할 수 있다."]]}, {"n": 22, "name": "재해⋅재난과 안전", "stds": [["[9과22-01]", "재해⋅재난 사례와 관련된 자료를 조사하고, 그 발생 원인과 피해에 대해 과학적으로 분석할 수 있다."], ["[9과22-02]", "과학적 원리를 이용하여 재해⋅재난에 대한 대비 및 대처 방안을 세울 수 있다."]]}, {"n": 23, "name": "과학과 나의 미래", "stds": [["[9과23-01]", "과학과 관련된 직업의 종류와 하는 일을 조사하고, 과학기술의 발달로 생기는 미래 사회의 직업 변화를 예상할 수 있다."], ["[9과23-02]", "자신의 진로와 관련 있는 과학 분야를 조사하고, 진로 선택을 위하여 필요한 과학 학습을 계획할 수 있다."]]}]}, {"id": "eng", "name": "영어", "units": [{"n": 1, "name": "이해", "stds": [["[9영01-01]", "단어, 어구, 문장을 듣고 연음이나 축약된 소리를 식별한다."], ["[9영01-02]", "친숙한 주제에 관한 담화나 글에서 세부 정보를 파악한다."], ["[9영01-03]", "친숙한 주제에 관한 담화나 글의 중심 내용을 파악한다."], ["[9영01-04]", "친숙한 주제에 관한 담화나 글에서 일이나 사건의 논리적 관계를 파악한다."], ["[9영01-05]", "친숙한 주제에 관한 담화나 글에서 인물의 기분이나 감정을 추론한다."], ["[9영01-06]", "친숙한 주제에 관한 담화나 글에서 화자나 필자의 의도나 목적을 추론한다."], ["[9영01-07]", "단어, 어구, 문장의 함축적 의미를 추론한다."], ["[9영01-08]", "적절한 전략을 활용하여 다양한 매체로 표현된 담화나 글을 듣거나 읽는다."], ["[9영01-09]", "다양한 관점을 존중하는 태도로 듣거나 읽는다."], ["[9영01-10]", "자신의 관심사에 관한 다양한 담화나 글을 선택하여 적극적으로 듣거나 읽는다."]]}, {"n": 2, "name": "표현", "stds": [["[9영02-01]", "연음이나 축약된 소리를 활용하여 단어, 어구, 문장을 말한다."], ["[9영02-02]", "대상이나 인물의 감정을 묘사한다."], ["[9영02-03]", "친숙한 주제에 관해 사실적 정보를 설명한다."], ["[9영02-04]", "친숙한 주제에 관해 경험이나 계획을 설명한다."], ["[9영02-05]", "친숙한 주제에 관해 일이나 사건의 논리적 관계를 설명한다."], ["[9영02-06]", "친숙한 주제에 관해 자신의 의견을 주장한다."], ["[9영02-07]", "친숙한 주제에 관해 듣거나 읽고 내용을 요약한다."], ["[9영02-08]", "간단한 일기, 편지, 이메일 등의 글을 쓴다."], ["[9영02-09]", "적절한 매체를 활용하여 정보 윤리를 준수하며 말하거나 쓴다."], ["[9영02-10]", "적절한 전략을 활용하여 상황이나 목적에 맞게 말하거나 쓴다."], ["[9영02-11]", "상대방을 배려하는 태도로 말하거나 쓴다."]]}]}, {"id": "tech", "name": "기술·가정", "units": [{"n": 1, "name": "인간 발달과 주도적 삶", "stds": [["[9기가01-01]", "자아 존중감을 향상시키고 긍정적인 자아 정체성을 형성하기 위해 청소년기의 발달 특징을 자신의 발달 특징과 연결 지어 자신을 총체적으로 이해한다."], ["[9기가01-02]", "의생활, 식생활이 청소년기 성장과 건강에 미치는 영향을 탐색하고 성장과 건강을 위해 바람직한 의생활과 식생활의 실천 방안을 탐색하여 이를 실천한다."], ["[9기가01-03]", "건강과 성장을 위한 청소년기 영양의 중요성을 이해하여 자신의 식생활을 평가하고, 식생활 문제를 개선하여 건강한 식생활을 실천한다."], ["[9기가01-04]", "의복디자인 요소를 고려한 자기이미지에 맞는 옷차림으로 자신을 긍정적으로 표현한다."], ["[9기가01-05]", "청소년기의 건강한 발달을 위협하는 스트레스, 분노, 우울 등의 여러 가지 행동 및 심리 문제의 원인을 분석하고, 적응 유연성을 기를 수 있는 다양한 예방 및 해결방안을 탐색하여 적용한다."], ["[9기가01-06]", "사회변화로 증가하는 여러 가지 청소년 중독의 유형을 탐색하여 이를 예방하고 대응할 수 있는 방안을 제안한다."], ["[9기가01-07]", "자기 이해를 기반으로 전 생애적 관점에서 진로 설계의 중요성을 인식하고, 자기 적성에 맞는 진로를 설계한다."], ["[9기가01-08]", "성적 자기 결정권의 중요성을 이해하고, 성인지 감수성과 건강한 성 가치관을 함양하여 상호 존중의 관계를 실천할 수 있는 방안을 탐색한다."], ["[9기가01-09]", "일상생활 및 가상공간에서 만나는 또래와 건강한 관계를 형성하고, 다양한 주변인들과 친밀한 세대 간 관계를 형성하는 방안을 탐색하여 실천한다."], ["[9기가01-10]", "다양한 현대 가족에 내재된 가족생활의 보편성과 고유한 가치를 존중하는 동시에 가족에 대한 유연한 태도를 길러, 뉴노멀 사회에서의 새로운 가족문화를 탐색한다."], ["[9기가01-11]", "대인 관계에서 발생하는 갈등의 원인과 배경을 분석하고, 효과적인 의사소통을 통해 갈등을 해결하는 방안을 탐색하여 이를 적용한다."], ["[9기가01-12]", "성폭력과 가정폭력의 사회⋅구조적인 원인과 영향을 분석하고, 다양한 문제 상황을 중심으로 이를 대처하고 지원하는 방안을 탐색한다."]]}, {"n": 2, "name": "생활환경과 지속가능한 선택", "stds": [["[9기가02-01]", "생활자원의 종류와 특성 및 순환과정을 이해하고, 의식주 자원관리의 중요성을 인식한다."], ["[9기가02-02]", "한국인 영양소 섭취기준과 식사구성안을 바탕으로 균형 잡힌 식사를 계획한다."], ["[9기가02-03]", "건강과 환경을 고려한 식품의 선택, 관리, 보관 방법을 탐색하여 실생활에 적용한다."], ["[9기가02-04]", "개인과 가족의 영양 요구와 지속가능성을 충족하는 식사를 계획하고 조리한다."], ["[9기가02-05]", "의복 재료의 특성을 이해하고 건강과 환경을 고려한 의복의 세탁과 관리 방안을 탐색하여 실천한다."], ["[9기가02-06]", "지속가능성을 고려하여 의복 마련 계획을 세우고, 이를 창의적이고 친환경적인 의생활에 적용한다."], ["[9기가02-07]", "주거의 의미와 가치가 변화함에 따라 나타나는 다양한 생활 양식을 탐색하고, 더불어 살아가는 주거 문화를 실천한다."], ["[9기가02-08]", "생활공간으로서 주거환경의 조건을 분석하고, 쾌적하고 안전한 주거 관리 방안을 탐색하여 실생활에 적용한다."], ["[9기가02-09]", "효율적인 주거 공간 구성 방안을 탐색하여 자신의 생활에 적합한 주거 공간 구성에 활용한다."], ["[9기가02-10]", "의식주 생활자원의 생산과 폐기과정을 탐색하고, 일상생활에서 의식주 생활자원을 선택한 과정과 그 결과를 성찰한다."], ["[9기가02-11]", "급변하는 소비환경의 변화를 이해하고, 다양한 소비자 정보를 비판적으로 분석하여 자신의 소비생활에 활용한다."], ["[9기가02-12]", "청소년 소비자의 특성을 이해하고 소비자 의사 결정 과정을 통한 합리적인 소비생활을 실천한다."], ["[9기가02-13]", "책임 있는 소비자로서 소비자의 권리와 역할을 인식하고, 소비생활에서 발생하는 소비자 문제와 해결 방안을 탐색하여 소비생활에 적용한다."], ["[9기가02-14]", "디지털 생활환경으로 나타난 일상생활의 혁신과 변화를 비판적으로 분석한 결과를 삶의 질 향상에 활용할 수 있는 방안을 탐색하여 제안한다."]]}, {"n": 3, "name": "기술적 문제해결과 혁신", "stds": [["[9기가03-01]", "기술의 의미와 특성을 이해하고 기술의 발달에 따른 사회의 변화를 파악하며, 미래의 기술과 사회의 변화를 평가하고 예측함으로써 기술에 대한 가치를 인식한다."], ["[9기가03-02]", "기술의 표준화, 적정 기술과 같은 기술 활용 사례를 탐구하고, 기술이 사회에 미치는 영향을 바르게 인식하여 기술 혁신과 사회 발전에 참여하는 태도를 갖는다."], ["[9기가03-03]", "기술적 문제 해결 과정의 이해를 바탕으로 문제를 확인하고, 정보를 수집하며, 확산적 사고와 수렴적 사고를 통해 해결방안을 탐색하고 대안을 선정한다."], ["[9기가03-04]", "기술적 문제 해결 방안을 시각화하고 도면을 작성하며, 올바른 도구를 선택하여 시제품 또는 모형을 제작 및 평가하는 과정에서 협업 능력, 공감 능력과 의사소통 능력을 기른다."], ["[9기가03-05]", "발명의 개념을 이해하고, 발명 문제 해결 과정을 바탕으로 발명 활동을 체험하여 창조에 대한 자신감을 갖고 발명이 사회에 미친 영향과 가치를 인식한다."], ["[9기가03-06]", "지식재산권의 종류와 특징을 이해하고, 지식재산과 관련한 다양한 사례 조사 및 체험을 통해 지식재산권의 창출, 보호, 활용을 이해하고 실천한다."], ["[9기가03-07]", "재료의 종류와 특성을 이해하며, 목적에 맞는 재료를 선택하고, 안전한 가공 방법을 실천한다."], ["[9기가03-08]", "설계의 가치와 필요성을 인식하고, 제도의 기본 통칙에 따라 도면을 작성한다."], ["[9기가03-09]", "제품의 제작 순서를 이해하고 올바른 도구를 선택하여 제품을 안전하게 제작하고 평가한다."], ["[9기가03-10]", "친환경 에너지 자원의 특성을 이해하고, 종류와 활용 사례를 조사하여 친환경 에너지 개발의 중요성을 인식한다."], ["[9기가03-11]", "에너지와 관련된 문제를 발견하고 창의적인 해결방안을 탐색하여 실현하고 평가한다."], ["[9기가03-12]", "다양한 수송 수단과 물류 체제를 이해하고 발달과정 및 특징과 혁신적인 활용 사례를 조사하여 수송 분야의 발달을 전망한다."], ["[9기가03-13]", "수송 수단 및 물류 체제와 관련된 문제를 이해하고 해결방안을 탐색하여 실현하고 평가한다."]]}, {"n": 4, "name": "지속가능한 기술과 융합", "stds": [["[9기가04-01]", "건설기술의 개념 및 발달과정, 건설 구조물의 종류와 특성을 이해하고, 건설 구조물의 혁신사례를 탐구함으로써 건설기술의 중요성을 인식한다."], ["[9기가04-02]", "건설 구조물의 종류에 따른 계획, 설계, 시공, 유지관리 방법을 탐구하고 건설과정의 중요성을 이해하며 건설 구조물의 가치를 인식한다."], ["[9기가04-03]", "사용자 요구 및 주어진 환경과 조건을 충족하는 지속가능한 건설 구조물의 모형을 설계⋅제작 및 평가한다."], ["[9기가04-04]", "전기⋅전자 부품의 종류와 기능을 이해하고 기능에 맞는 부품을 선택하여 문제를 해결하기 위한 간단한 회로를 구성하고 제작 및 평가한다."], ["[9기가04-05]", "정보통신과 인공지능 기술의 활용 사례를 탐구하고, 정보통신과 인공지능 기술이 우리 삶에 미치는 영향을 다양한 관점에서 평가한다."], ["[9기가04-06]", "정보통신과 인공지능 기술 관련 문제를 이해하고 해결 방안을 탐색, 실현, 평가함으로써 긍정적인 문제 해결 태도를 갖는다."], ["[9기가04-07]", "기계의 구성 요소 및 동력 전달 장치의 종류와 특징을 이해하고, 작동 원리에 맞는 기계요소를 선택하여 평가한다."], ["[9기가04-08]", "다양한 기계요소와 동력 전달 방법을 활용하여 주어진 문제를 해결할 수 있는 운동 물체를 안전하게 제작하고 평가한다."], ["[9기가04-09]", "로봇에 활용되고 있는 제어 및 자동화 기술 등을 탐구하여 간단한 로봇을 제작하고 평가함으로써 창조에 대한 자신감을 갖는다."], ["[9기가04-10]", "인간의 건강과 생명 연장을 위해 의료 분야에서 활용되는 생명기술 사례를 조사하고, 생명기술이 개인과 사회에 미친 영향을 평가한다."], ["[9기가04-11]", "생명기술을 이해하며, 이와 관련된 문제의 해결 방안을 탐색, 실현, 평가하고, 생명 존중 및 윤리적 태도를 갖는다."], ["[9기가04-12]", "기술적 문제에 대한 도전적 태도로 다양한 분야에 활용되고 있는 융합 기술의 사례를 탐구하고 미래의 기술 변화를 전망한다."], ["[9기가04-13]", "긍정적이고 공감하는 문제 해결 태도를 바탕으로 지속가능한 발전과 혁신을 위해 융합기술 문제를 해결하고 과정과 결과를 평가한다."]]}]}, {"id": "info", "name": "정보", "units": [{"n": 1, "name": "컴퓨팅 시스템", "stds": [["[9정01-01]", "컴퓨팅 시스템의 구성요소와 동작 원리를 이해하고, 운영 체제의 기능을 분석한다."], ["[9정01-02]", "피지컬 컴퓨팅의 개념을 이해하고, 생활 속에서 적용된 사례 조사를 통해 컴퓨팅 시스템의 필요성과 가치를 판단한다."], ["[9정01-03]", "문제 해결 목적에 맞는 피지컬 컴퓨팅 구성요소를 선택하여 시스템을 구상한다."]]}, {"n": 2, "name": "데이터", "stds": [["[9정02-01]", "실생활의 데이터가 디지털 형태로 변환되어 활용되는 긍정적 가치를 탐색하고, 다양한 데이터를 디지털 형태로 표현한다."], ["[9정02-02]", "문제 해결에 적합한 데이터를 수집하고, 목적에 맞게 구분하여 관리한다."], ["[9정02-03]", "실생활의 데이터를 표, 다이어그램 등 다양한 형태로 구조화한다."], ["[9정02-04]", "사례를 중심으로 데이터 간의 관계를 파악하고, 데이터에 기반하여 의미를 해석한다."], ["[9정02-05]", "여러 학문 분야의 사례를 중심으로 데이터를 수집⋅분석하여 융합적으로 문제를 해결한다."]]}, {"n": 3, "name": "알고리즘과 프로그래밍", "stds": [["[9정03-01]", "문제의 상태를 정의하고 수행 가능한 형태로 구조화한다."], ["[9정03-02]", "문제 해결을 위한 추상화의 중요성을 이해하고, 핵심요소를 중심으로 알고리즘을 표현한다."], ["[9정03-03]", "알고리즘의 중요성을 이해하고, 문제를 해결하는 다양한 알고리즘을 비교⋅분석한다."], ["[9정03-04]", "사례를 중심으로 문제 해결에 적합한 전략을 선택하여 알고리즘을 설계한다."], ["[9정03-05]", "데이터를 순차적으로 저장할 수 있는 구조를 활용하여 문제 해결 프로그램을 작성한다."], ["[9정03-06]", "논리 연산과 중첩 제어 구조를 활용하여 문제를 해결하는 프로그램을 작성한다."], ["[9정03-07]", "프로그램 작성에서 함수를 활용하고, 프로그램 수행 결과를 디버거로 분석하여 오류를 수정한다."], ["[9정03-08]", "실생활의 문제를 탐색하여 발견하고, 프로그래밍을 통해 해결한다."], ["[9정03-09]", "다양한 학문 분야의 문제 해결을 위해 협력하여 소프트웨어를 개발한다."]]}, {"n": 4, "name": "인공지능", "stds": [["[9정04-01]", "인공지능의 개념과 특성을 설명하고 인공지능 소프트웨어를 구별한다."], ["[9정04-02]", "인공지능 학습에서 데이터의 중요성을 이해하고, 학습에 필요한 데이터를 수집하여 분류한다."], ["[9정04-03]", "다양한 데이터를 활용하여 인공지능 시스템을 구성하고 적용한다."], ["[9정04-04]", "인공지능 시스템으로 해결 가능한 문제를 발견하고, 문제 해결에 적합한 인공지능 시스템을 적용한다."], ["[9정04-05]", "인공지능 학습에 필요한 데이터의 수집과 활용에서 발생하는 윤리적인 문제의 해결 방안을 구상한다."]]}, {"n": 5, "name": "디지털 문화", "stds": [["[9정05-01]", "디지털 사회의 특성을 탐구하고, 사회 변화에 따른 직업의 변화를 탐구한다."], ["[9정05-02]", "디지털 사회의 구성원으로서 편리하고 안전한 생활을 위한 규칙에 대해 민주적으로 논의하고 실천 방안을 수립한다."], ["[9정05-03]", "사례를 중심으로 디지털 공간에서 함께 살아가기 위해 개인 정보 및 권리와 저작권을 보호하는 실천 방법을 탐구한다."]]}]}];
+</script>
+<script>
+(function () {
+  'use strict';
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+
+  var GROUPS = [
+    { id: 'special', label: '특수교육대상', count: 1 },
+    { id: 'basic', label: '기초학력 부족', count: 3 },
+    { id: 'multi', label: '다문화 가정', count: 2 },
+    { id: 'general', label: '일반 학생', count: 19 }
+  ];
+  var STUDENTS = [
+    { sid: '1301', name: '김이화', g: 'general' }, { sid: '1302', name: '김사범', g: 'general' }, { sid: '1303', name: '김수교', g: 'general' },
+    { sid: '1305', name: '박도윤', g: 'special' },
+    { sid: '1308', name: '최윤서', g: 'basic' }, { sid: '1312', name: '이하준', g: 'basic' }, { sid: '1320', name: '정서아', g: 'basic' },
+    { sid: '1316', name: '한유나', g: 'multi' }, { sid: '1322', name: '왕하오', g: 'multi' }
+  ];
+  var TRAITS = [
+    { id: 'read', label: '글 읽기가 어려워요', desc: '긴 지시문을 짧게, 할 일을 한 줄에 하나씩' },
+    { id: 'steps', label: '여러 단계 문제가 어려워요', desc: '해야 할 일을 단계로 나누고 단계마다 칸 제공' },
+    { id: 'focus', label: '주의 집중이 부족해요', desc: '문항과 답 칸을 가까이, 활동을 짧게 나눔' },
+    { id: 'vocab', label: '한국어 어휘가 어려워요', desc: '학습 용어에 쉬운 뜻풀이와 그림 단서' }
+  ];
+  var LEVELS = { basic: { label: '스스로 풀기', sub: '도움 적게' }, step: { label: '단계 따라 풀기', sub: '도움 보통' }, focus: { label: '차근차근 풀기', sub: '도움 많이' } };
+  var DEMO_STD = '[9사(지리)02-03]';
+  var GOALS = { '[9사(지리)02-03]': '아시아의 인구 분포 자료를 읽고, 지역별 인구 특징을 자료에 근거하여 설명할 수 있다.' };
+  var VIEWS = ['intro', 'setup', 'home', 'create', 'sheet', 'guide', 'upload', 'review', 'summary', 'next', 'record'];
+  var MAKE = [['create', '수업 고르기'], ['sheet', '학습지'], ['guide', '한 장 가이드']];
+  var CHECK = [['upload', '사진 올리기'], ['review', '분석 확인'], ['summary', '저장'], ['next', '다음 학습지']];
+
+  var S = {
+    view: 'intro', group: 'basic', sid: '1312', recSid: null,
+    traits: {
+      '1305': { focus: true, read: true, note: '활동을 짧게 나누면 끝까지 참여해요' },
+      '1308': { steps: true }, '1312': { read: true, steps: true }, '1320': { read: true },
+      '1316': { vocab: true, read: true, note: '핵심 낱말을 그림과 함께 보여 주고, 집에서 쓰는 말로도 짚어 주면 이해가 빨라요' },
+      '1322': { vocab: true }
+    },
+    memo: {
+      '1312': { hard: '지역은 잘 찾지만, 자료에서 근거를 찾아 문장으로 쓰는 것을 어려워해요. 긴 지시문에서는 시작이 늦어요.', care: '지시문은 한 줄에 하나씩. 근거 문장 틀을 주고, 짝 활동 때 말로 먼저 설명할 기회를 주세요.' }
+    },
+    subj: 'geo', unit: 1, std: DEMO_STD, open: null, src: 'ai',
+    tab: null, hints: {},
+    photo: {}, uploaded: {}, comment: {
+      '1312': '지역 찾기는 이제 자신 있게 해요. 말로 물어보면 ‘진한 색이라서’라고 근거를 말할 수 있으니, 그 말을 그대로 문장으로 옮겨 쓰는 연습이 필요해요.'
+    },
+    saved: {}, nextSaved: {}, gradedTab: 'graded'
+  };
+
+  var stu = function (sid) { return STUDENTS.find(function (x) { return x.sid === (sid || S.sid); }); };
+  var me = function () { return stu(S.sid); };
+  var tr = function (sid) { return S.traits[sid || S.sid] || {}; };
+  var grp = function (id) { return GROUPS.find(function (g) { return g.id === id; }); };
+  var hasTraits = function (sid) { var t = S.traits[sid]; return !!t && TRAITS.some(function (x) { return t[x.id]; }); };
+  var rec = function (sid) { var t = tr(sid); if (t.focus || t.vocab) return 'focus'; if (t.read || t.steps) return 'step'; return 'basic'; };
+  var memo = function () { return S.memo[S.sid] || (S.memo[S.sid] = { hard: '', care: '' }); };
+  var curr = function () {
+    var subj = CURRICULUM.find(function (x) { return x.id === S.subj; }) || CURRICULUM[0];
+    var unit = subj.units[S.unit] || subj.units[0];
+    var std = unit.stds.find(function (x) { return x[0] === S.std; }) || unit.stds[0];
+    return { subj: subj, unit: unit, std: std, goal: GOALS[std[0]] || std[1] };
+  };
+
+  var ICON = {
+    logo: '<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="color: var(--accent)"><rect x="5" y="3" width="18" height="22" rx="3"></rect><path d="M9 10h10"></path><path d="M9 15h7"></path><path d="M9 20h4"></path></svg>',
+    bulb: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"></path></svg>',
+    chev: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>',
+    cam: '<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--accent)"><path d="M4 8a2 2 0 0 1 2-2h2l2-2h4l2 2h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>'
+  };
+
+  /* ---------- shared pieces ---------- */
+  function top() {
+    var nav = [['setup', '학생 정보 설정'], ['create', '학습지 만들기'], ['upload', '풀이 분석하기']];
+    var inMake = ['create', 'sheet', 'guide'].indexOf(S.view) >= 0, inCheck = ['upload', 'review', 'summary', 'next', 'record'].indexOf(S.view) >= 0;
+    var cur = S.view === 'setup' ? 'setup' : inMake ? 'create' : inCheck ? 'upload' : '';
+    return '<header class="top"><div class="top-in">' +
+      '<button class="brand" data-go="intro" aria-label="모두의 학습지 시작 화면으로">' + ICON.logo + '모두의 학습지</button>' +
+      '<nav class="nav" aria-label="주요 메뉴">' + nav.map(function (n) {
+        return '<button data-go="' + n[0] + '"' + (cur === n[0] ? ' aria-current="page"' : '') + '>' + n[1] + '</button>';
+      }).join('') +
+      (S.view !== 'setup' ? '<button class="who" data-go="setup" aria-label="선택한 학생: ' + esc(me().name) + ', 학생 바꾸기">' + esc(me().name) + ' · ' + me().sid + '</button>' : '') +
+      '</nav></div></header>';
+  }
+  function flow(list) {
+    var idx = list.findIndex(function (x) { return x[0] === S.view; });
+    return '<ol class="flow" aria-label="진행 단계">' + list.map(function (x, i) {
+      return '<li><button data-go="' + x[0] + '"' + (i === idx ? ' aria-current="step"' : '') + (i < idx ? ' class="done"' : '') + '><span class="n">' + (i + 1) + '</span>' + x[1] + '</button></li>';
+    }).join('') + '</ol>';
+  }
+  function sheetHead(unitTitle) {
+    return '<div class="shead"><div class="unitbox">' + esc(unitTitle) + '</div><div class="idbox"><span>학번 <b>' + me().sid + '</b></span><span>이름 <b style="min-width: 90px">' + esc(me().name) + '</b></span></div></div>';
+  }
+  function hint(id, text, tag) {
+    var on = !!S.hints[id];
+    return '<div class="hint"><button aria-expanded="' + on + '" data-hint="' + id + '">' + ICON.bulb + '생각해 볼까요? <small>' + (on ? '접기' : '눌러서 힌트 보기') + '</small></button>' +
+      (on ? '<div class="body">' + (tag ? '<span class="tag">' + tag + '</span> ' : '') + text + '</div>' : '') + '</div>';
+  }
+  function chips() {
+    var t = tr();
+    var out = '<span class="pill solid">' + grp(me().g).label + '</span>';
+    TRAITS.forEach(function (x) { if (t[x.id]) out += '<span class="pill">' + x.label + '</span>'; });
+    return '<div class="row" style="gap: 6px">' + out + '</div>';
+  }
+
+  /* ---------- views ---------- */
+  var V = {};
+
+  var TEACHER = '<svg class="teacher" width="220" height="240" viewBox="0 0 240 260" role="img" aria-label="학습지를 들고 손을 흔드는 박서연 선생님 캐릭터">' +
+    '<ellipse cx="120" cy="250" rx="72" ry="8" fill="rgba(0,0,0,0.18)"></ellipse>' +
+    '<path d="M58 252 C58 192 80 166 120 166 C160 166 182 192 182 252 Z" fill="#FFE7A3"></path>' +
+    '<path d="M120 166 L120 252" stroke="#E9C46A" stroke-width="2"></path>' +
+    '<path d="M103 168 L120 198 L137 168 Z" fill="#FFFFFF"></path>' +
+    '<circle cx="128" cy="212" r="3" fill="#E9C46A"></circle><circle cx="128" cy="230" r="3" fill="#E9C46A"></circle>' +
+    '<g class="arm"><path d="M74 188 C52 172 44 148 48 126" stroke="#FFE7A3" stroke-width="20" stroke-linecap="round" fill="none"></path><circle cx="48" cy="118" r="11" fill="#F6D2B5"></circle></g>' +
+    '<rect x="110" y="146" width="20" height="22" rx="4" fill="#EFC3A3"></rect>' +
+    '<path d="M68 102 C66 46 174 46 172 102 L174 152 C152 162 88 162 66 152 Z" fill="#3B2A22"></path>' +
+    '<ellipse cx="120" cy="106" rx="42" ry="45" fill="#F6D2B5"></ellipse>' +
+    '<path d="M76 104 C76 60 164 56 165 100 C150 84 130 78 113 82 C100 86 88 94 76 104 Z" fill="#3B2A22"></path>' +
+    '<circle cx="104" cy="112" r="11" fill="none" stroke="#5A3E30" stroke-width="2.5"></circle><circle cx="136" cy="112" r="11" fill="none" stroke="#5A3E30" stroke-width="2.5"></circle><path d="M115 112 L125 112" stroke="#5A3E30" stroke-width="2.5"></path>' +
+    '<ellipse cx="104" cy="113" rx="3.5" ry="4.5" fill="#2B2B2B"></ellipse><ellipse cx="136" cy="113" rx="3.5" ry="4.5" fill="#2B2B2B"></ellipse>' +
+    '<ellipse cx="92" cy="128" rx="7" ry="4" fill="#F4A6A0" opacity="0.75"></ellipse><ellipse cx="148" cy="128" rx="7" ry="4" fill="#F4A6A0" opacity="0.75"></ellipse>' +
+    '<path d="M110 130 Q120 139 130 130" stroke="#8A3F2A" stroke-width="3" fill="none" stroke-linecap="round"></path>' +
+    '<g transform="rotate(-8 176 208)"><rect x="148" y="172" width="56" height="70" rx="4" fill="#FFFFFF" stroke="#1F5E43" stroke-width="2"></rect>' +
+    '<path d="M156 186 H196 M156 196 H190 M156 206 H194" stroke="#9DB5A6" stroke-width="3" stroke-linecap="round"></path>' +
+    '<rect x="155" y="216" width="34" height="16" rx="8" fill="#FFF7DB" stroke="#E9C46A" stroke-width="1.5"></rect><circle cx="163" cy="224" r="3.5" fill="#E9C46A"></circle></g>' +
+    '<circle cx="156" cy="222" r="11" fill="#F6D2B5"></circle>' +
+    '</svg>';
+
+  V.intro = function () {
+    return '<main class="intro" style="max-width: none">' +
+      '<p class="school"><b>이화중학교</b> · 1학년 3반 · 박서연 선생님</p>' +
+      '<div class="stage">' + TEACHER + '<p class="bubble">안녕하세요, 서연 선생님!<br>오늘은 누구의 학습지를<br>만들어 볼까요?</p></div>' +
+      '<div style="display: flex; flex-direction: column; gap: 10px; align-items: center"><h1 tabindex="-1">모두의 학습지</h1><p class="tagline">같은 목표로 함께, 필요한 만큼의 도움은 다르게</p></div>' +
+      '<button class="start" data-go="setup">모두의 학습지 시작하기</button>' +
+      '<ol class="preview" aria-label="이렇게 진행돼요"><li><span>1</span>학생 정보 설정</li><li><span>2</span>맞춤 학습지와 한 장 가이드</li><li><span>3</span>풀이 분석과 기록</li></ol>' +
+      '</main>';
+  };
+
+  V.setup = function () {
+    var g = grp(S.group), list = STUDENTS.filter(function (x) { return x.g === g.id; });
+    var sel = list.find(function (x) { return x.sid === S.sid; }) || list[0];
+    var t = S.traits[sel.sid] || {};
+    var done = STUDENTS.filter(function (x) { return x.g !== 'general' && hasTraits(x.sid); }).length;
+    return '<main class="narrow">' +
+      '<div style="display: flex; flex-direction: column; gap: 8px"><p class="sub">1단계 · 처음 한 번만 하면 돼요</p><h1 tabindex="-1">먼저 우리 반 학생 정보를 설정해요</h1><p class="sub">1학년 3반 · 25명. 지원이 필요한 학생을 고르고 세부 특성을 체크해 두면, 학습지를 만들 때마다 반영돼요.</p></div>' +
+      '<section class="card"><h2>학생 유형</h2><div class="groups">' + GROUPS.map(function (x) {
+        return '<button aria-pressed="' + (x.id === g.id) + '" data-group="' + x.id + '"><strong>' + x.label + '</strong><span>' + x.count + '명 · 보기</span></button>';
+      }).join('') + '</div>' +
+      '<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 15px; font-weight: 500">' + g.label + ' 학생</span><div class="choice">' + list.map(function (x) {
+        return '<button aria-pressed="' + (x.sid === sel.sid) + '" data-pick="' + x.sid + '">' + x.sid + ' ' + esc(x.name) + (hasTraits(x.sid) ? ' · 설정됨' : '') + '</button>';
+      }).join('') + (g.count > list.length ? '<span class="sub" style="align-self: center">외 ' + (g.count - list.length) + '명</span>' : '') + '</div></div></section>' +
+      '<section class="card"><div class="between" style="align-items: baseline"><h2>세부 특성 · ' + esc(sel.name) + ' <span class="sub" style="font-weight: 400">' + sel.sid + ' · ' + g.label + '</span></h2><span class="sub" style="font-size: 14px">체크하거나 직접 써 주세요. 진단명은 적지 않아도 돼요.</span></div>' +
+      '<div class="checks">' + TRAITS.map(function (x) {
+        return '<label class="check"><input type="checkbox" data-trait="' + x.id + '"' + (t[x.id] ? ' checked' : '') + '><span><strong>' + x.label + '</strong><small>' + x.desc + '</small></span></label>';
+      }).join('') + '</div>' +
+      '<label class="field">직접 쓰기 (선택)<textarea rows="2" data-note placeholder="예: 활동을 짧게 나누면 끝까지 참여해요">' + esc(t.note || '') + '</textarea></label></section>' +
+      '<div class="foot"><span class="note">지원 학생 ' + done + ' / 6명 설정 완료 · 나중에 언제든 바꿀 수 있어요</span><button class="btn primary lg" data-go="home">' + esc(sel.name) + ' 학생으로 시작하기</button></div>' +
+      '</main>';
+  };
+
+  V.home = function () {
+    return '<main class="narrow">' +
+      '<div class="hero"><h1 tabindex="-1">모두의 학습지</h1><p class="sub" style="font-size: 18px">같은 목표로 함께, 필요한 만큼의 도움은 다르게</p></div>' +
+      '<section class="card"><div class="between" style="align-items: center"><h2>학생 기본 정보</h2><button class="btn" data-go="setup">학생 바꾸기</button></div>' +
+      '<div class="idpair" style="justify-content: flex-start"><span><b>이름</b><em>' + esc(me().name) + '</em></span><span><b>학번</b><em>' + me().sid + '</em></span></div>' + chips() + '</section>' +
+      '<div class="bigs"><button class="big" data-go="upload"><strong>풀이 분석하기</strong><span>학생이 푼 학습지 사진을 올리면 잘한 점과 부족한 점을 찾아요.</span></button>' +
+      '<button class="big primary" data-go="create"><strong>학습지 만들기</strong><span>과목과 단원을 고르면 이 학생에게 맞춘 학습지를 만들어요.</span></button></div>' +
+      '<p class="school">이화중학교 · 1학년 3반 · 박서연 선생님</p></main>';
+  };
+
+  function dd(key, label, value, items, full) {
+    var open = S.open === key;
+    return '<div class="dd' + (full ? ' full' : '') + '"><span class="lab">' + label + '</span>' +
+      '<button aria-expanded="' + open + '" aria-haspopup="listbox" data-dd="' + key + '"><span>' + esc(value) + '</span>' + ICON.chev + '</button>' +
+      (open ? '<ul role="listbox" aria-label="' + label + '">' + items.map(function (it) {
+        return '<li><button role="option" aria-selected="' + it.sel + '" data-opt="' + key + '" data-val="' + esc(it.val) + '">' + esc(it.label) + '</button></li>';
+      }).join('') + '</ul>' : '') + '</div>';
+  }
+  V.create = function () {
+    var c = curr(), m = memo();
+    return '<main>' + flow(MAKE) +
+      '<div><p class="sub">학번 ' + me().sid + ' · ' + grp(me().g).label + '</p><h1 tabindex="-1">' + esc(me().name) + '의 학습지</h1></div>' +
+      '<div class="split"><section class="card grow"><h2>무엇을 배우나요?</h2>' +
+      '<div class="dd-row">' +
+      dd('subj', '과목', c.subj.name, CURRICULUM.map(function (x) { return { val: x.id, label: x.name, sel: x.id === c.subj.id }; })) +
+      '<span class="arrow" aria-hidden="true">→</span>' +
+      dd('unit', '단원', '(' + c.unit.n + ') ' + c.unit.name, c.subj.units.map(function (u, i) { return { val: String(i), label: '(' + u.n + ') ' + u.name, sel: u === c.unit }; })) +
+      '</div>' +
+      dd('std', '성취기준', c.std[0] + ' ' + c.std[1], c.unit.stds.map(function (x) { return { val: x[0], label: x[0] + ' ' + x[1], sel: x[0] === c.std[0] }; }), true) +
+      '<div class="goal"><strong>학습 목표</strong> · ' + esc(c.goal) + '</div>' +
+      '<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 15px; font-weight: 500">문제</span><div class="choice">' +
+      [['ai', 'AI가 성취기준에 맞춰 만들기'], ['orig', '원래 학습지 올리기']].map(function (o) { return '<button aria-pressed="' + (S.src === o[0]) + '" data-src="' + o[0] + '">' + o[1] + '</button>'; }).join('') +
+      '</div></div></section>' +
+      '<aside class="card side" style="border: 2px solid var(--accent)"><div><h2>' + esc(me().name) + ' 학생 메모</h2><p class="sub" style="font-size: 14px">선생님이 직접 써 주세요. 학습지와 한 장 가이드에 반영돼요.</p></div>' + chips() +
+      '<label class="field" style="font-weight: 700">• 어려운 점<textarea rows="3" data-memo="hard">' + esc(m.hard) + '</textarea></label>' +
+      '<label class="field" style="font-weight: 700">• 보완·신경 쓸 점<textarea rows="3" data-memo="care">' + esc(m.care) + '</textarea></label></aside></div>' +
+      '<div class="foot"><button class="btn" data-go="home">처음으로</button><button class="btn primary lg" data-make>학습지 만들기</button></div></main>';
+  };
+
+  /* worksheet content (demo: 아시아의 인구) */
+  function mat1() {
+    var sw = ['#E8F0EB', '#B5CFC0', '#6FA38A', '#2E6B50'];
+    return '<figure class="mat"><figcaption>[자료 1] 아시아의 인구 밀도</figcaption><div class="mapph">아시아 인구 밀도 지도 자리<br>(교과서·통계 지도를 넣어요)</div>' +
+      '<div class="legend"><span>범례 · 인구 밀도</span><span style="display: flex">' + sw.map(function (c) { return '<i style="background:' + c + '"></i>'; }).join('') + '</span><span>낮음 → 높음</span></div></figure>';
+  }
+  function mat2() {
+    var p = function (l, ws) { return '<div class="p"><b>' + l + '</b>' + ws.map(function (w) { return '<i style="width:' + w + '%"></i>'; }).join('') + '</div>'; };
+    return '<figure class="mat"><figcaption>[자료 2] 두 나라의 인구 피라미드</figcaption><div class="pyr"><div class="ax"><span>노년층</span><span>청장년층</span><span>유소년층</span></div>' +
+      p('(가) 나라', [18, 28, 40, 55, 72, 90]) + p('(나) 나라', [62, 80, 88, 74, 58, 44]) + '</div></figure>';
+  }
+  var ul = function (xs) { return '<ol class="steps">' + xs.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>'; };
+  var SP = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+  function worksheet(level) {
+    var c = curr();
+    var head = sheetHead('(' + c.unit.n + ') ' + c.unit.name + (c.std[0] === DEMO_STD ? ' · 아시아의 인구' : ''));
+    var goal = '<p style="font-size: 15px">↳ <strong>학습 목표</strong> · ' + esc(c.goal) + '</p>';
+    var body = '';
+    if (level === 'basic') {
+      body = mat1() + '<p class="q"><strong>1.</strong> [자료 1]을 보고 아시아에서 인구가 많이 모여 사는 지역 두 곳을 찾아 쓰고, 그렇게 판단한 근거를 자료에서 찾아 쓰세요.</p><div class="blank">지역 / 근거</div>' +
+        hint('b1', '지도의 색이 무엇을 뜻하는지는 어디에서 알 수 있을까요?') + mat2() +
+        '<p class="q"><strong>2.</strong> [자료 2]의 (가), (나) 나라의 인구 구조를 비교하고, 각 나라가 앞으로 겪을 수 있는 문제를 한 가지씩 쓰세요.</p><div class="blank">비교 / (가)의 문제 / (나)의 문제</div>' +
+        hint('b2', '두 그림에서 가장 긴 막대는 각각 어느 나이대에 있나요?');
+    } else if (level === 'step') {
+      body = mat1() + '<p class="q"><strong>1.</strong> 인구가 많이 모여 사는 지역을 찾고, 근거를 써요.</p>' +
+        ul(['범례에서 가장 진한 색의 뜻: ______________', '가장 진한 색이 모인 지역 두 곳: __________, __________', '근거 문장 완성: “(' + SP + ') 색이 (' + SP + SP + ')을/를 뜻하므로 이 지역은 인구가 많다.”']) +
+        hint('s1', '두 지역에서 공통으로 보이는 색은 무엇인가요?') + mat2() +
+        '<p class="q"><strong>2.</strong> 두 나라의 인구 구조를 비교해요.</p>' +
+        ul(['(가)에서 가장 긴 막대의 나이대: __________', '(나)에서 가장 긴 막대의 나이대: __________', '앞으로 겪을 수 있는 문제 · (가) __________ · (나) __________']) +
+        hint('s2', '아이가 많은 나라와 노인이 많은 나라는 각각 무엇이 더 필요할까요?');
+    } else {
+      body = '<div class="vocab"><strong>낱말 뜻</strong><br>인구 밀도: 일정한 넓이에 사는 사람 수<br>범례: 지도의 색과 기호가 무엇을 뜻하는지 알려 주는 표<br>인구 구조: 나이별로 사람이 얼마나 있는지</div>' + mat1() +
+        '<p class="q" style="font-weight: 700; font-size: 18px">1. 지도를 보고 답해요.</p>' +
+        ul(['범례에서 가장 진한 색에 ○ 하세요.', '그 색이 많은 곳에 ○ 하세요. &nbsp;동아시아 &nbsp;/ &nbsp;서남아시아 사막', '왜 그렇게 골랐나요? “(' + SP + ') 색이 많아서”']) +
+        hint('f1', '색이 진한 곳에는 사람이 많을까요, 적을까요?') + mat2() +
+        '<p class="q" style="font-weight: 700; font-size: 18px">2. 그림 (가), (나)를 봐요.</p>' +
+        ul(['아이가 많은 나라: &nbsp;(가) &nbsp;/ &nbsp;(나)', '노인이 많은 나라: &nbsp;(가) &nbsp;/ &nbsp;(나)']) +
+        hint('f2', '가장 아래 막대는 어떤 사람들을 뜻할까요?');
+    }
+    return '<article class="sheet" aria-label="학습지">' + head + goal + body + '</article>';
+  }
+  V.sheet = function () {
+    var c = curr(), r = rec(), tab = S.tab || r, m = memo();
+    var demoNote = c.std[0] !== DEMO_STD ? '<p class="sub" style="font-size: 14px">시연용 화면이라 문항은 예시(아시아의 인구)로 보여요. 실제 도구에서는 고른 성취기준(' + esc(c.std[0]) + ')에 맞춰 AI가 문항을 만들어요.</p>' : '';
+    return '<main>' + flow(MAKE) +
+      '<div class="between"><div><p class="sub">' + esc(c.subj.name) + ' · (' + c.unit.n + ') ' + esc(c.unit.name) + ' · ' + esc(c.std[0]) + '</p><h1 tabindex="-1">' + esc(me().name) + '의 학습지가 준비됐어요</h1></div>' +
+      '<div class="row"><button class="btn" data-go="create">다시 만들기</button><button class="btn primary" data-print>인쇄</button></div></div>' + demoNote +
+      '<div class="banner"><span><strong>' + esc(me().name) + ' 학생에게는 ‘' + LEVELS[r].label + '’를 추천해요</strong>' + (m.hard ? ' · 선생님 메모를 반영했어요.' : '') + ' 세 학습지 모두 같은 문제이고, 학생용 학습지에는 단계 이름이 인쇄되지 않아요.</span></div>' +
+      '<div class="tabs" role="tablist" aria-label="지원 단계">' + ['basic', 'step', 'focus'].map(function (k) {
+        return '<button role="tab" aria-selected="' + (k === tab) + '" data-tab="' + k + '">' + LEVELS[k].label + '<small>' + LEVELS[k].sub + (k === r ? ' · ' + esc(me().name) + ' 추천' : '') + '</small></button>';
+      }).join('') + '</div>' +
+      '<div role="tabpanel">' + worksheet(tab) + '</div>' +
+      '<div class="foot"><button class="btn" data-go="create">이전</button><button class="btn primary lg" data-go="guide">한 장 가이드 보기</button></div></main>';
+  };
+
+  V.guide = function () {
+    var c = curr(), m = memo();
+    var lists = { basic: [], step: [], focus: [] };
+    STUDENTS.forEach(function (x) { if (x.g !== 'general') lists[rec(x.sid)].push(x.name); });
+    lists.basic.unshift('일반 학생 19명');
+    var nm = function (k) { return lists[k].length ? lists[k].join(', ') : '없음'; };
+    var hard = [
+      ['A', '범례에서 색의 뜻 읽기', '1번 ①', '차근차근 풀기 학생 (' + nm('focus') + ')', '도입에서 칠판에 범례를 띄우고 “가장 진한 색은 무엇을 뜻할까요?”를 반 전체가 함께 읽고 시작해요.'],
+      ['B', '자료에서 근거를 찾아 문장으로 쓰기', '1번 ③', '단계 따라 풀기 학생 (' + nm('step') + ')' + (S.sid === '1312' ? ' · 이하준은 지난 기록에서도 2회 반복' : ''), '짝 토의에서 먼저 말로 근거를 설명하고, 짝이 들은 말을 함께 문장으로 옮겨 써요. 토의 질문 Q1과 이어져요.'],
+      ['C', '인구 피라미드에서 나이대 읽기', '2번 ①②', '차근차근 풀기, 단계 따라 풀기 학생 일부', '전체 마무리에서 막대를 아래부터 하나씩 짚으며 “이 막대는 누구일까요?”를 함께 읽어요. Q3와 이어져요.'],
+      ['D', '인구 구조로 앞으로의 문제 추론하기', '2번 ③', '스스로 풀기 학생', '근거를 두 가지 이상 쓰도록 “그래프의 어느 부분을 보고 그렇게 생각했나요?”로 한 번 더 물어요. Q2와 이어져요.']
+    ];
+    var flowItems = [['도입 5분', '범례 함께 읽기 → 공통 질문 “사람이 많이 모이는 곳은 지도에서 어떻게 보일까요?”', 'A 연계'], ['개별 활동 18분', '각자 받은 학습지로 풀기. 근거 칸을 비워 둔 학생에게 ‘생각해 볼까요?’를 눌러 보게 해요', 'B 살피기'], ['짝 토의 12분', '지원 단계가 서로 다른 학생끼리 짝. 말로 근거 설명 → 함께 문장으로 쓰기', 'B 연계'], ['전체 마무리 10분', '피라미드 막대 함께 읽기 → 토의 질문 Q2·Q3', 'C·D 연계']];
+    return '<main class="narrow">' + flow(MAKE) +
+      '<div class="between"><div><h1 tabindex="-1">한 장 가이드</h1><p class="sub">학습지에서 학생들이 어려워할 부분을 수업 흐름과 토의 질문에 연계했어요.</p></div><button class="btn primary" data-print>인쇄</button></div>' +
+      '<article class="sheet" aria-label="한 장 가이드" style="max-width: 900px">' +
+      '<div class="between" style="font-size: 14px; color: var(--ink2); border-bottom: 2px solid var(--ink); padding-bottom: 10px; align-items: center"><span><strong style="color: var(--ink)">한 장 가이드</strong> · ' + esc(c.subj.name) + ' (' + c.unit.n + ') ' + esc(c.unit.name) + ' · ' + esc(c.std[0]) + '</span><span>학생에게 배부하지 않음</span></div>' +
+      '<p style="font-size: 15px">학습 목표 · ' + esc(c.goal) + '</p>' +
+      '<section style="display: flex; flex-direction: column; gap: 10px"><div><h3>학습지에서 어려운 부분 → 수업 연계</h3><p class="sub" style="font-size: 13px">학습지 문항, 선생님 메모, 지난 풀이 기록을 바탕으로 정리했어요</p></div>' +
+      (m.hard ? '<p class="soft" style="font-size: 14px"><strong>' + esc(me().name) + ' 메모</strong> · ' + esc(m.hard) + '</p>' : '') +
+      '<div class="tbl"><table><thead><tr><th>학습지에서 어려운 부분</th><th>누가 막힐 수 있나요</th><th>수업 중 이렇게 연계해요</th></tr></thead><tbody>' +
+      hard.map(function (h) { return '<tr><td><strong>' + h[0] + '. ' + h[1] + '</strong><br><span class="sub" style="font-size: 13px">' + h[2] + '</span></td><td>' + esc(h[3]) + '</td><td>' + h[4] + '</td></tr>'; }).join('') +
+      '</tbody></table></div></section>' +
+      '<section style="display: flex; flex-direction: column; gap: 10px"><h3>수업 흐름 (가이드)</h3><ol class="flowgrid">' + flowItems.map(function (f) { return '<li><strong>' + f[0] + '</strong><span>' + f[1] + '</span><em>' + f[2] + '</em></li>'; }).join('') + '</ol></section>' +
+      '<section style="display: flex; flex-direction: column; gap: 10px"><h3>지원 단계별 학습지</h3><div class="tbl"><table><thead><tr><th></th>' + ['basic', 'step', 'focus'].map(function (k) { return '<th>' + LEVELS[k].label + '<br><span style="font-weight: 400; font-size: 12px">' + LEVELS[k].sub + '</span></th>'; }).join('') + '</tr></thead><tbody>' +
+      '<tr><th>받는 학생</th><td>' + esc(nm('basic')) + '</td><td>' + esc(nm('step')) + '</td><td>' + esc(nm('focus')) + '</td></tr>' +
+      '<tr><th>학습지 차이</th><td>원래 문항 그대로, 근거는 스스로</td><td>짧은 지시 + 단계 칸 + 근거 문장 틀</td><td>한 줄 지시, 고르기·빈칸, 낱말 뜻</td></tr>' +
+      '<tr><th>생각해 볼까요?</th><td>문항마다 질문 1개</td><td>단계마다 질문 1개</td><td>쉬운 질문 + 그림 단서</td></tr>' +
+      '</tbody></table></div><p style="font-size: 14px; color: var(--ink2)">학생 수준이 아니라 <strong>도움의 양</strong>으로 나눴어요. 자료·문항·학습 목표는 모두 같아요.</p></section>' +
+      '<section style="display: flex; flex-direction: column; gap: 10px"><h3>토의 질문</h3><ul class="list">' +
+      '<li><span class="tag">B 연계</span> Q1. 같은 지도를 보고 짝은 어떤 근거로 지역을 골랐나요? 그 근거는 자료의 어디에서 왔나요?</li>' +
+      '<li><span class="tag">D 연계</span> Q2. 인구가 많이 모여 사는 지역에는 어떤 공통점이 있을까요? 지도에서 근거를 찾아 말해 봐요.</li>' +
+      '<li><span class="tag">C 연계</span> Q3. 인구 구조가 다른 (가)와 (나) 나라는 서로 어떤 도움을 주고받을 수 있을까요?</li></ul></section>' +
+      '<section class="soft" style="display: flex; flex-direction: column; gap: 10px"><h3>공통 마무리 질문 (지원 단계가 다른 학생끼리 짝 활동)</h3><ul class="list"><li>내 근거와 짝의 근거에서 같은 점과 다른 점을 한 가지씩 말해 봐요.</li><li>우리나라의 인구 피라미드는 (가)와 (나) 중 어느 쪽에 더 가까울까요? 왜 그렇게 생각하나요?</li></ul></section>' +
+      '<section style="display: flex; flex-direction: column; gap: 10px"><h3>정답과 채점 포인트</h3><ul class="list"><li>1번 · 지역: 동아시아(중국 동부 등), 남아시아(인도 북부 등) · 근거: 범례에서 인구 밀도가 높은 진한 색이 나타남. 평야·하천·기후까지 연결하면 심화</li><li>2번 · (가) 유소년층 비율이 높음 → 학교·일자리 부족 등 · (나) 노년층 비율이 높음 → 일할 사람 부족, 부양 부담 등</li></ul></section>' +
+      '</article>' +
+      '<div class="foot"><button class="btn" data-go="sheet">학습지로 돌아가기</button><button class="btn primary lg" data-go="upload">수업이 끝나면 풀이 분석하기</button></div></main>';
+  };
+
+  V.upload = function () {
+    var up = S.uploaded[S.sid], photo = S.photo[S.sid];
+    var inner = up
+      ? (photo ? '<img src="' + photo + '" alt="올린 학습지 사진">' : '<div class="ph">예시 학습지 사진</div>') + '<strong style="font-size: 17px; color: var(--accent-ink)">올렸어요 · 다음을 누르면 분석해요</strong><span class="sub">다른 사진으로 바꾸려면 다시 눌러 주세요</span>'
+      : ICON.cam + '<strong>사진</strong><span>학생의 학습지를 업로드해 주세요</span><span class="sub" style="font-size: 14px">휴대폰으로 찍어 바로 올려도 돼요</span>';
+    return '<main class="narrow">' + flow(CHECK) +
+      '<div class="between" style="align-items: center"><h1 tabindex="-1" style="border: 2px solid var(--ink); border-radius: 10px; padding: 6px 18px">풀이 분석하기</h1><span class="sub">' + esc(me().name) + ' · ' + me().sid + ' · 아시아의 인구 (' + LEVELS[rec()].label + ')</span></div>' +
+      '<label class="drop' + (up ? ' has' : '') + '"><input type="file" accept="image/*" class="visually-hidden" data-file>' + inner + '</label>' +
+      '<div class="foot"><button class="btn" data-sample>예시 사진으로 해 보기</button><div class="row">' + (up ? '' : '<span class="note">사진을 올리면 다음으로 넘어갈 수 있어요</span>') + '<button class="btn primary lg" data-go="review"' + (up ? '' : ' disabled') + '>다음</button></div></div></main>';
+  };
+
+  V.review = function () {
+    var n = esc(me().name), photo = S.photo[S.sid], gt = S.gradedTab;
+    var graded = '<div class="graded">' + sheetHead('(2) 아시아 · 아시아의 인구') +
+      '<div style="display: flex; flex-direction: column; gap: 6px"><p style="font-size: 15px"><strong>1.</strong> 인구가 많이 모여 사는 지역을 찾고, 근거를 써요.</p>' +
+      '<div class="gl"><span class="m pen c-blue" aria-label="맞음">○</span><span class="a pen">지역: 동아시아, 남아시아</span></div>' +
+      '<div class="gl"><span class="m pen c-red" aria-label="보완 필요">△</span><span class="a pen">근거:</span><span style="flex-grow: 1; border-bottom: 1px solid var(--line3); height: 22px"></span></div>' +
+      '<p class="fb pen c-red">→ 지역은 정확해요! 범례에서 어떤 색을 보고 골랐는지 한 줄 써 볼까요?</p></div>' +
+      '<div style="display: flex; flex-direction: column; gap: 6px"><p style="font-size: 15px"><strong>2.</strong> 두 나라의 인구 구조를 비교해요.</p>' +
+      '<div class="gl"><span class="m pen c-blue" aria-label="맞음">○</span><span class="a pen">(가) 어린이가 많다 / (나) 노인이 많다</span></div>' +
+      '<div class="gl"><span class="m pen c-blue" aria-label="맞음">○</span><span class="a pen">(나) 일할 사람이 부족하다</span></div>' +
+      '<p class="fb pen c-blue">→ 비교를 잘했어요. (가) 나라의 문제도 한 가지 써 볼까요?</p></div></div>';
+    var orig = photo ? '<img src="' + photo + '" alt="' + n + ' 학생이 올린 원본 풀이 사진" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--line2)">' : '<div class="ph" style="width: 100%; height: 420px">원본 풀이 사진</div>';
+    return '<main>' + flow(CHECK) +
+      '<div class="between" style="align-items: center"><h1 tabindex="-1">분석 결과 확인</h1><span class="sub">' + n + ' · ' + me().sid + ' · 아시아의 인구 (' + LEVELS[rec()].label + ')</span></div>' +
+      '<div class="split"><section class="rv">' +
+      '<div><h2><span class="hl-blue">잘한 점</span></h2><ul class="list"><li>1번 · 인구가 많이 모여 사는 지역(동아시아, 남아시아)을 정확히 찾았어요.</li><li>2번 · (가)는 어린 사람이, (나)는 노인이 많다고 두 나라를 바르게 비교했어요.</li></ul></div>' +
+      '<div><h2><span class="hl-red">부족한 점</span></h2><ul class="list"><li>1번 · 근거 문장 칸이 비어 있어요. 자료(범례)에서 근거를 찾아 문장으로 쓰는 단계에 도움이 필요할 가능성이 있어요.</li><li>2번 · (나) 나라의 문제는 썼지만 (가) 나라의 문제는 쓰지 않았어요.</li></ul><p class="sub" style="font-size: 13px">AI의 판단은 ‘가능성’이에요. 원본과 비교해 확인해 주세요.</p></div>' +
+      '<label>교사 코멘트 <span class="sub" style="font-size: 14px; font-weight: 400">직접 작성</span><textarea rows="4" data-comment placeholder="학생에게 전할 말이나 관찰한 점을 적어 주세요" style="font-weight: 400">' + esc(S.comment[S.sid] || '') + '</textarea></label></section>' +
+      '<section class="card" style="flex: 1 1 420px"><div class="between" style="align-items: center"><h2>학생의 학습지</h2><div class="choice"><button aria-pressed="' + (gt === 'graded') + '" data-gt="graded">채점·피드백</button><button aria-pressed="' + (gt === 'orig') + '" data-gt="orig">원본 사진</button></div></div>' +
+      (gt === 'graded' ? graded : orig) + '</section></div>' +
+      '<div class="foot"><button class="btn" data-go="upload">이전</button><button class="btn primary lg" data-go="summary">다음</button></div></main>';
+  };
+
+  V.summary = function () {
+    var saved = S.saved[S.sid];
+    return '<main class="narrow">' + flow(CHECK) +
+      '<h1 tabindex="-1" style="text-align: center; font-size: 34px">모두의 학습지</h1>' +
+      '<div class="idpair"><span><b>이름</b><em>' + esc(me().name) + '</em></span><span><b>학번</b><em>' + me().sid + '</em></span></div>' +
+      '<p class="sub" style="text-align: center">2026.11.26 · 사회(지리) (2) 아시아 · 아시아의 인구 · ' + LEVELS[rec()].label + '</p>' +
+      '<div class="tbl big"><table><tbody>' +
+      '<tr><th scope="row" style="color: var(--blue)">잘한 점</th><td>인구가 많이 모여 사는 지역(동아시아, 남아시아)을 정확히 찾았어요. 두 나라의 인구 구조를 바르게 비교했어요.</td></tr>' +
+      '<tr><th scope="row" style="color: var(--red)">부족한 점</th><td>자료(범례)에서 근거를 찾아 문장으로 쓰는 단계에 도움이 필요해요. (가) 나라가 겪을 문제를 쓰지 않았어요.</td></tr>' +
+      '<tr><th scope="row">교사 코멘트</th><td>' + (S.comment[S.sid] ? esc(S.comment[S.sid]) : '<span class="sub">아직 쓰지 않았어요. 이전 화면에서 쓸 수 있어요.</span>') + '</td></tr>' +
+      '</tbody></table></div>' +
+      '<div style="display: flex; flex-direction: column; align-items: center; gap: 10px"><button class="btn ' + (saved ? 'primary' : 'outline') + ' lg" data-save style="min-width: 200px">' + (saved ? '저장했어요' : '저장') + '</button>' +
+      (saved ? '<p style="color: var(--accent-ink); font-size: 15px">풀이 사진과 함께 ' + esc(me().name) + ' 학생 기록에 날짜순으로 저장했어요.</p>' : '') + '</div>' +
+      '<div class="foot"><button class="btn" data-go="review">이전</button><button class="btn primary lg" data-go="next">다음 학습지 만들기</button></div></main>';
+  };
+
+  function status(sid) {
+    if (S.nextSaved[sid] || S.saved[sid]) return ['저장됨', 'var(--accent-ink)'];
+    var base = { '1301': 1, '1302': 1, '1305': 1, '1316': 1 };
+    if (base[sid]) return ['저장됨', 'var(--accent-ink)'];
+    if (sid === S.sid) return ['작성 중', 'var(--warn)'];
+    return ['분석 전', 'var(--muted)'];
+  }
+  V.next = function () {
+    var saved = S.nextSaved[S.sid];
+    var sorted = STUDENTS.slice().sort(function (a, b) { return a.sid.localeCompare(b.sid); });
+    return '<main>' + flow(CHECK) +
+      '<div><h1 tabindex="-1">' + esc(me().name) + '의 다음 학습지</h1><p class="sub">사회(지리) (2) 아시아 · [9사(지리)02-04] 아시아의 산업 · 오늘 분석에서 찾은 부족한 점을 반영했어요</p></div>' +
+      '<div class="split"><section class="grow" style="display: flex; flex-direction: column; gap: 16px"><div class="tbl big"><table><tbody>' +
+      '<tr><th scope="row">공통 질문</th><td>아시아에서 공업이 발달한 지역은 어디일까요? 자료에서 근거를 하나 찾아 짝에게 말해 봐요.<br><span class="sub" style="font-size: 13px">반 전체가 같은 질문으로 시작해요</span></td></tr>' +
+      '<tr><th scope="row">질문형<br>힌트</th><td>힌트 1) 어떤 색과 범례를 보고 그렇게 판단했나요? <span class="tag">부족한 점 반영</span><br>힌트 2) 말로 설명한 근거를 그대로 한 문장으로 옮겨 쓴다면? <span class="tag">부족한 점 반영</span></td></tr>' +
+      '<tr><th scope="row">피드백<br>바탕<br>연습 문항</th><td>연습 문항 1) [자료] 아시아 산업 지도에서 공업이 발달한 지역을 한 곳 찾고, “(' + SP + ')을/를 보니 (' + SP + ')” 문장으로 근거를 써 보세요.<br>연습 문항 2) 지난 시간 인구 피라미드 (가) 나라가 앞으로 겪을 수 있는 문제를 한 가지 쓰고, 그렇게 생각한 이유를 그래프에서 찾아 보세요.</td></tr>' +
+      '</tbody></table></div><div class="row"><button class="btn ' + (saved ? 'primary' : 'outline') + ' lg" data-savenext>' + (saved ? '저장했어요' : '저장') + '</button><span class="sub">최종 저장하면 명단에 학번 순서대로 저장돼요</span></div></section>' +
+      '<aside class="card side"><div class="between" style="align-items: baseline"><h2>[명단] 1학년 3반</h2><span class="sub" style="font-size: 13px">학번순</span></div><ul class="roster">' +
+      sorted.map(function (x) {
+        var st = status(x.sid);
+        return '<li' + (x.sid === S.sid ? ' class="me"' : '') + '><span class="sid">' + x.sid + '</span><span class="nm"' + (x.sid === S.sid ? ' style="font-weight: 700"' : '') + '>' + esc(x.name) + '</span><span class="st" style="color:' + st[1] + '">' + st[0] + '</span><button data-rec="' + x.sid + '">풀이 확인</button></li>';
+      }).join('') + '</ul><span class="sub" style="font-size: 13px">외 16명</span></aside></div>' +
+      '<div class="foot"><button class="btn" data-go="summary">이전</button><button class="btn primary lg" data-rec="' + S.sid + '">' + esc(me().name) + ' 풀이 기록 보기</button></div></main>';
+  };
+
+  V.record = function () {
+    var sid = S.recSid || S.sid, x = stu(sid), entries = [];
+    var e = function (date, title, lv, oks, helps, memoTxt, photo, isNew) {
+      return '<li><div class="thumb">' + (photo ? '<img src="' + photo + '" alt="">' : '풀이 사진') + '</div><div class="body"><div class="row" style="gap: 8px"><strong>' + date + '</strong>' + (isNew ? '<span class="pill solid">오늘 저장</span>' : '') + '</div><span class="sub">' + title + ' · ' + lv + '</span>' +
+        oks.map(function (t) { return '<span><span class="k-ok">해결함</span> ' + t + '</span>'; }).join('') + helps.map(function (t) { return '<span><span class="k-help">도움 필요</span> ' + t + '</span>'; }).join('') +
+        (memoTxt ? '<span class="sub" style="font-size: 14px">교사 메모 · ' + esc(memoTxt) + '</span>' : '') + '</div></li>';
+    };
+    if (S.saved[sid]) entries.push(e('2026.11.26', '사회(지리) 아시아의 인구 [9사(지리)02-03]', LEVELS[rec(sid)].label, ['인구가 많은 지역 찾기', '인구 피라미드 비교'], ['자료에서 근거를 찾아 문장으로 쓰기'], S.comment[sid], S.photo[sid], true));
+    if (sid === '1312') {
+      entries.push(e('2026.11.19', '사회(지리) 아시아의 위치와 자연환경 [9사(지리)02-01]', '단계 따라 풀기', ['지도에서 나라와 도시 위치 찾기 (범례 힌트 본 뒤)'], ['기후 그래프를 보고 판단한 근거 쓰기'], '범례 질문을 받고 스스로 찾음'));
+      entries.push(e('2026.11.12', '사회(지리) 세계화 시대, 지리의 힘 [9사(지리)01-01]', '차근차근 풀기', ['범례 읽기 (힌트 본 뒤)'], ['긴 지시문 문항에서 시작하지 못함'], '지시문을 나눠 주니 바로 시작함'));
+    }
+    var sums = sid === '1312'
+      ? '<div class="sums"><div class="s-ok"><b>스스로 해결하게 된 단계</b>지도 범례 읽기 · 11.12에는 힌트가 필요했지만 이제 힌트 없이 해결해요</div><div class="s-help"><b>아직 도움이 필요한 단계</b>자료에서 근거를 찾아 문장으로 쓰기 · ' + (S.saved[sid] ? '3회 중 2회 연속 (11.19, 11.26)' : '11.19 기록') + '</div><div class="s-next"><b>다음 학습지에 반영할 것</b>범례 힌트는 줄이고, 근거 질문 “어떤 색과 범례를 보고 그렇게 판단했나요?”와 근거 쓰기 연습 문항을 넣어요</div></div>'
+      : '<p class="empty">풀이 기록이 두 번 이상 쌓이면 AI 요약이 나타나요.</p>';
+    return '<main>' +
+      '<div class="between"><div><h1 tabindex="-1">풀이 확인 · ' + esc(x.name) + ' 학생 기록</h1><p class="sub">학번 ' + x.sid + ' · ' + grp(x.g).label + ' · 저장된 풀이 ' + entries.length + '건</p></div><div class="row"><button class="btn" data-go="next">명단으로</button><button class="btn primary" data-go="create">다음 맞춤 학습지 만들기</button></div></div>' +
+      '<section style="display: flex; flex-direction: column; gap: 12px"><h2>AI 요약 <span class="sub" style="font-size: 14px; font-weight: 400">교사가 확인한 기록만 바탕으로 해요</span></h2>' + sums + '</section>' +
+      '<section style="display: flex; flex-direction: column; gap: 12px"><h2>날짜별 풀이 기록</h2>' + (entries.length ? '<ol class="entries">' + entries.join('') + '</ol>' : '<p class="empty">아직 저장된 풀이가 없어요. 풀이 분석하기에서 사진을 올리고 저장하면 여기에 쌓여요.</p>') + '</section></main>';
+  };
+
+  /* ---------- render & routing ---------- */
+  var app = document.getElementById('app');
+  var lastView = null;
+  function render() {
+    document.body.classList.toggle('is-intro', S.view === 'intro');
+    app.innerHTML = (S.view === 'intro' ? '' : top()) + V[S.view]();
+    if (lastView !== S.view) {
+      window.scrollTo(0, 0);
+      var h = app.querySelector('h1');
+      if (h) h.focus({ preventScroll: true });
+      lastView = S.view;
+    }
+  }
+  function go(v) {
+    if (VIEWS.indexOf(v) < 0) v = 'setup';
+    S.open = null;
+    if (v !== 'record') S.recSid = null;
+    S.view = v;
+    render();
+  }
+  function toast(msg) {
+    var t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t);
+    document.getElementById('live').textContent = msg;
+    setTimeout(function () { t.remove(); }, 2200);
+  }
+  function keepFocus(sel) {
+    render();
+    var el = app.querySelector(sel); if (el) el.focus();
+  }
+
+  app.addEventListener('click', function (ev) {
+    var b = ev.target.closest('button, [data-go]');
+    if (!b || b.disabled) return;
+    var d = b.dataset;
+    if (d.go) { go(d.go); return; }
+    if (d.group) { S.group = d.group; var first = STUDENTS.find(function (x) { return x.g === d.group; }); S.sid = first.sid; S.tab = null; keepFocus('[data-group="' + d.group + '"]'); return; }
+    if (d.pick) { S.sid = d.pick; S.tab = null; keepFocus('[data-pick="' + d.pick + '"]'); return; }
+    if (d.dd) { S.open = S.open === d.dd ? null : d.dd; keepFocus(S.open ? '[data-opt="' + d.dd + '"][aria-selected="true"]' : '[data-dd="' + d.dd + '"]'); return; }
+    if (d.opt) {
+      if (d.opt === 'subj') { S.subj = d.val; S.unit = 0; S.std = null; }
+      if (d.opt === 'unit') { S.unit = +d.val; S.std = null; }
+      if (d.opt === 'std') { S.std = d.val; }
+      var k = d.opt; S.open = null; keepFocus('[data-dd="' + k + '"]'); return;
+    }
+    if (d.src) { S.src = d.src; keepFocus('[data-src="' + d.src + '"]'); return; }
+    if (b.hasAttribute('data-make')) { S.tab = null; S.hints = {}; go('sheet'); return; }
+    if (d.tab) { S.tab = d.tab; keepFocus('[data-tab="' + d.tab + '"]'); return; }
+    if (d.hint) { S.hints[d.hint] = !S.hints[d.hint]; keepFocus('[data-hint="' + d.hint + '"]'); return; }
+    if (b.hasAttribute('data-print')) { window.print(); return; }
+    if (b.hasAttribute('data-sample')) { S.uploaded[S.sid] = true; S.photo[S.sid] = null; render(); toast('예시 사진을 올렸어요'); return; }
+    if (d.gt) { S.gradedTab = d.gt; keepFocus('[data-gt="' + d.gt + '"]'); return; }
+    if (b.hasAttribute('data-save')) { S.saved[S.sid] = true; keepFocus('[data-save]'); toast(me().name + ' 학생 기록에 저장했어요'); return; }
+    if (b.hasAttribute('data-savenext')) { S.nextSaved[S.sid] = true; keepFocus('[data-savenext]'); toast('명단에 학번 순서대로 저장했어요'); return; }
+    if (d.rec) { S.recSid = d.rec; S.open = null; S.view = 'record'; render(); return; }
+  });
+  app.addEventListener('change', function (ev) {
+    var t = ev.target;
+    if (t.dataset.trait) {
+      var sid = S.sid; S.traits[sid] = S.traits[sid] || {}; S.traits[sid][t.dataset.trait] = t.checked; S.tab = null;
+      keepFocus('[data-trait="' + t.dataset.trait + '"]'); return;
+    }
+    if (t.hasAttribute('data-file') && t.files && t.files[0]) {
+      var r = new FileReader();
+      r.onload = function () { S.photo[S.sid] = r.result; S.uploaded[S.sid] = true; render(); toast('사진을 올렸어요'); };
+      r.readAsDataURL(t.files[0]);
+    }
+  });
+  app.addEventListener('input', function (ev) {
+    var t = ev.target;
+    if (t.hasAttribute('data-note')) { S.traits[S.sid] = S.traits[S.sid] || {}; S.traits[S.sid].note = t.value; }
+    if (t.dataset.memo) { memo()[t.dataset.memo] = t.value; }
+    if (t.hasAttribute('data-comment')) { S.comment[S.sid] = t.value; }
+  });
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && S.open) { var k = S.open; S.open = null; keepFocus('[data-dd="' + k + '"]'); }
+  });
+  document.addEventListener('click', function (ev) {
+    if (S.open && !ev.target.closest('.dd')) { S.open = null; render(); }
+  });
+
+  S.view = 'intro';
+  render();
+})();
+</script>
+</body>
+</html>
